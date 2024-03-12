@@ -4,6 +4,18 @@ SuchErsetz:
             suchstring = Left(ar(k), InStr(ar(k), "@") - 1)
             ergaenzstring = Right(ar(k), Len(ar(k)) - InStr(ar(k), "@"))
 
+'use the following loop instead of typiccal searching, add cases for plural etc
+            Dim selectionRange As Range
+            Set selectionRange = ActiveDocument.Range
+            Do While selectionRange.Find.Execute(FindText:=suchstring, Forward:=True) = True
+                MsgBox ("in loop, suchstring: " & selectionRange.Text)
+                'check here if selectionRange.Text has an additional s at the end
+
+            Loop
+            MsgBox ("done with loop")
+
+
+
                 'Suchen und Ersetzen
                 Selection.HomeKey Unit:=wdStory
 
