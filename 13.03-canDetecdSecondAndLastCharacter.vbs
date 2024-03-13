@@ -10,12 +10,7 @@ Function IsLetter(char As String) As Boolean
         IsLetter = False
     End If
 End Function
-
 Sub SuchErgaenzSpezial()
-
-
-
-
 
 '
 'Makro vom 30.09.2016 von Jacek Manka
@@ -155,6 +150,7 @@ Open myPath For Input As #1
 
                         'Prüfung des Suchstrings
                         suchstring = Left(ar(i), InStr(ar(i), "@") - 1)
+                        MsgBox ("suchstring before ergeanz: " & suchstring)
                         l = l + 1: ReDim Preserve splitar(l)
                         splitar(l) = suchstring
                         'Suchen
@@ -167,7 +163,7 @@ Open myPath For Input As #1
                             .Format = False
                             .MatchCase = True
                             .MatchWholeWord = True
-                            .MatchAllWordForms = True
+                            .MatchAllWordForms = False 'proplem with sentences if True!
                             .MatchSoundsLike = False
                             .MatchWildcards = False
                         End With
@@ -297,8 +293,11 @@ Ergaenzeingabe:
 SuchErsetz:
 
             For k = 1 To i
+            MsgBox ("ARRAY [" & k & "]: " & ar(k))
             suchstring = Left(ar(k), InStr(ar(k), "@") - 1)
             ergaenzstring = " (" & Right(ar(k), Len(ar(k)) - InStr(ar(k), "@")) & ")"
+
+            MsgBox ("SUCHSTRING: " & suchstring)
 
             Dim selectionRange As Range
             Set selectionRange = ActiveDocument.Range
