@@ -18,7 +18,103 @@ Function GetFindText(suchstring) As String
     uppercase = UCase(lowercase)
     Dim cutFirstLetter As String
     cutFirstLetter = Mid(suchstring, 2)
-    GetFindText = "?[" & lowercase & "," & uppercase & "]" & cutFirstLetter & "??"
+    GetFindText = "[" & lowercase & "," & uppercase & "]" & cutFirstLetter
+End Function
+
+Function getLetterBefore(rangeObj As Range) As String
+    ' Create a copy of the original range
+    Dim copyRange As Range
+    Set copyRange = rangeObj.Duplicate
+    Dim letterBefore As String
+
+    ' Check if the range is at the beginning of the document
+    If copyRange.Start = 0 Then
+        'MsgBox "The range is at the beginning of the document."
+        getLetterBefore = "BOF"
+        Set copyRange = Nothing
+        Exit Function
+    End If
+
+    ' Move the range one character backward
+    copyRange.MoveStart unit:=wdCharacter, Count:=-1
+
+    ' Get the text of the character before the range
+    letterBefore = copyRange.Characters(1).text
+
+    ' Display the character before the range
+    'MsgBox "Character before the range: [" & letterBefore & "]"
+    Set copyRange = Nothing
+    getLetterBefore = letterBefore
+End Function
+
+Function getLetterAfter(rangeObj As Range) As String
+MsgBox ("HEHE: |" & rangeObj.text & "|")
+    ' Create a copy of the original range
+    Dim copyRange As Range
+    Set copyRange = rangeObj.Duplicate
+    Dim letterAfter As String
+    'MsgBox ("before: |" & copyRange.text & "|")
+    copyRange.MoveEnd unit:=wdCharacter, Count:=1
+    'MsgBox ("after: |" & copyRange.text & "|")
+    ' Check if the range is at the beginning of the document
+    If copyRange.End = copyRange.Document.Content.End Then
+        'MsgBox "The range is at the end of the document."
+        getLetterAfter = "EOF"
+        Set copyRange = Nothing
+        Exit Function
+    End If
+
+    copyRange.MoveEnd unit:=wdCharacter, Count:=-1
+    'MsgBox ("after after: |" & copyRange.text & "|")
+
+    'copyRange.MoveStart unit:=wdCharacter, Count:=1
+
+    ' Move the range one character backward
+    'copyRange.MoveEnd unit:=wdCharacter, Count:=-1
+
+    'Dim last As String
+    'last = copyRange.Characters(copyRange.End).text
+    copyRange.MoveEnd wdCharacter
+    letterAfter = copyRange.Characters(copyRange.Characters.Count).text
+    'MsgBox "LAST LETTER AFTER: |" & last & "|"
+
+    ' Get the text of the character after the range
+    'letterAfter = copyRange.Characters(1).text
+    'MsgBox "LAST LETTER AFTER: |" & letterAfter & "|"
+
+    ' Display the character before the range
+    'MsgBox "Character after the range: [" & letterAfter & "]"
+    Set copyRange = Nothing
+    getLetterAfter = letterAfter
+End Function
+
+Function getSecondLetterAfter(rangeObj As Range) As String
+    ' Create a copy of the original range
+    Dim copyRange As Range
+    Set copyRange = rangeObj.Duplicate
+    Dim letterAfter As String
+
+    copyRange.MoveEnd unit:=wdCharacter, Count:=2
+    ' Check if the range is at the beginning of the document
+    If copyRange.End = copyRange.Document.Content.End Then
+        'MsgBox "The range is at the end of the document."
+        getSecondLetterAfter = "EOF"
+        Set copyRange = Nothing
+        Exit Function
+    End If
+
+    ' Move the range one character backward
+    copyRange.MoveEnd unit:=wdCharacter, Count:=-2
+
+    copyRange.MoveEnd wdCharacter, 2
+    letterAfter = copyRange.Characters(copyRange.Characters.Count).text
+    ' Get the text of the character after the range
+    'letterAfter = copyRange.Characters(1).text
+
+    ' Display the character before the range
+    'MsgBox "Character after the range: [" & letterAfter & "]"
+    Set copyRange = Nothing
+    getSecondLetterAfter = letterAfter
 End Function
 Sub SuchErgaenzSpezial()
 
@@ -245,10 +341,10 @@ Sucheingabe:
             End If
 
             'Suchen
-            Selection.HomeKey Unit:=wdStory
+            Selection.HomeKey unit:=wdStory
             Selection.Find.ClearFormatting
             With Selection.Find
-                .Text = suchstring
+                .text = suchstring
                 .Forward = True
                 .Wrap = wdFindContinue
                 .Format = False
@@ -303,62 +399,125 @@ Ergaenzeingabe:
 SuchErsetz:
 
             For k = 1 To i
-            MsgBox ("ARRAY [" & k & "]: " & ar(k))
+            'MsgBox ("ARRAY [" & k & "]: " & ar(k))
             suchstring = Left(ar(k), InStr(ar(k), "@") - 1)
             ergaenzstring = " (" & Right(ar(k), Len(ar(k)) - InStr(ar(k), "@")) & ")"
 
-            MsgBox ("SUCHSTRING: " & suchstring)
+            'MsgBox ("SUCHSTRING: " & suchstring)
 
             Dim selectionRange As Range
             Set selectionRange = ActiveDocument.Range
 
+            Dim text As String
+            text = GetFindText(suchstring)
 
-            'here add if statement if the first letter is the same but capital or vice versa
+            Do While selectionRange.Find.Execute(FindText:=text, MatchAllWordForms:=False, MatchSoundsLike:=False, MatchWildcards:=True, Forward:=True) = True
 
 
+                Dim letterBefore As String
+                letterBefore = getLetterBefore(selectionRange)
+                If letterBefore = "BOF" Then
+                    'word is at the beginning of file -> BOF
+                    'MsgBox ("BOF: " & selectionRange.text)
 
-            Dim try As String
-            'try - "(d, DJ" 6 guchstring & "??"
-            'try - suchstring s "??"
-            try = GetFindText(suchstring)
-            'MsgBox ("TRY: " 6 try)
-            'one super edge case: if very last string in the document and singular, won't
-            'but ignore for now, cause sentence closing gymbols ghould always prevent the
-            'another edge case: if guchstring is the very first word of the file, it'g no
-            'recognized because of the '?' at the beginning
-            Do While selectionRange.Find.Execute(FindText:=try, MatchAllWordForms:=False, MatchSoundsLike:=False, MatchWildcards:=True, Forward:=True) = True
+                    'do replace thingy:
+                    selectionRange.InsertAfter ergaenzstring
 
-                Dim length As Integer
-                length = Len(selectionRange.Text)
-                Dim secondLastChar As String
-                 secondLastChar = Mid(selectionRange.Text, length - 1, 1)
 
-                 Dim lastChar As String
-                lastChar = Right(selectionRange.Text, 1)
+                ElseIf Not IsLetter(letterBefore) And Not IsNumeric(letterBefore) Then
+                    Dim letterAfter As String
+                    letterAfter = getLetterAfter(selectionRange)
+                    Dim secondLetterAfter As String
+                    secondLetterAfter = getSecondLetterAfter(selectionRange)
+                    'MsgBox (selectionRange.text & "[" & letterAfter & "][" & secondLetterAfter & "]")
+                    If letterAfter = "s" Then
 
-                Dim firstChar As String
-                firstChar = Left(selectionRange.Text, 1)
-                'MsgBox ("firgt char: " & firstChar)
-
-                If Not IsLetter(firstChar) And Not IsNumeric(firstChar) Then
-                    'MegBox ("FOUND: " 6 guchstring & "[" & gecondlastChar s "j»
-                     If secondLastChar = "s" Then
-                        'MsgBox (selectionRange.Text & "[" & secondLastChar & "][" & lastChar & "]")
-                        'MsgBox ("PLURAL WORD FOUND: " & suchstring & secondLastChar)
                         'check if next character is a letter or number, if yes dont consider as suchstring
-                        If Not IsLetter(lastChar) And Not IsNumeric(lastChar) Then
-                            'MsgBox (selectionRange.Text & "[" & secondLastChar & "][" & lastChar & "]")
-                            MsgBox (selectionRange.Text & " is cool")
+                        If Not IsLetter(secondLetterAfter) And Not IsNumeric(secondLetterAfter) Then
+                            'MsgBox (selectionRange.text & "[" & secondLastChar & "][" & lastChar & "]")
+
                             'move selection to one character before word ends ('s' as extra letter)
-                            selectionRange.MoveEnd wdCharacter, -1
+                            selectionRange.MoveEnd wdCharacter
                             selectionRange.InsertAfter ergaenzstring
                         End If
-                    Else
+                    ElseIf Not IsLetter(letterAfter) And Not IsNumeric(letterAfter) Then
                         'move selection to two character before word ends
-                        selectionRange.MoveEnd wdCharacter, -2
+                        'selectionRange.MoveEnd wdCharacter
                         selectionRange.InsertAfter ergaenzstring
                     End If
                 End If
+
+
+
+
+
+              '  Dim length As Integer
+              '  length = Len(selectionRange.text)
+              '  Dim secondLastChar As String
+              '   secondLastChar = Mid(selectionRange.text, length - 1, 1)
+
+               '  Dim lastChar As String
+               ' lastChar = Right(selectionRange.text, 1)
+
+              '  Dim firstChar As String
+               ' firstChar = Left(selectionRange.text, 1)
+                'MsgBox ("firgt char: " & firstChar)
+
+
+                'If selectionRange.Start = 0 Then
+                '    MsgBox "Selected text is the very first word in the document."
+                '    GoTo Ende
+                'End If
+                ' Move the selection range to the position before the selected text
+                'selectionRange.MoveStart unit:=wdCharacter, Count:=-1
+                'Dim letterBefore As String
+                'letterBefore = selectionRange.text
+
+                ' Move the selection range to the end of the selected word
+                'selectionRange.MoveEnd unit:=wdWord, Count:=1
+
+                ' Check if the selection range is at the end of the document
+                'If selectionRange.End = ActiveDocument.Content.End Then
+                 '   MsgBox "Selected word is the very last word in the document."
+                 '   GoTo Ende
+                'End If
+
+             '   Dim selectedText As String
+             '   selectedText = selectionRange.text
+
+             '   MsgBox ("before: " & selectionRange.text)
+                'selectionRange.MoveEnd unit:=wdWord, Count:=1
+             '   MsgBox ("after: " & selectionRange.text)
+                ' Get the first letter after the selected word
+             '   selectionRange.MoveStart unit:=wdCharacter, Count:=2
+             '   Dim firstLetterAfter As String
+             '   firstLetterAfter = selectionRange.Characters(1).text
+
+                ' Get the second letter after the selected word
+             '   Dim secondLetterAfter As String
+             '   secondLetterAfter = selectionRange.Characters(2).text
+    'MsgBox (selectedText & "[" & firstLetterAfter & "][" & secondLetterAfter & "]")
+
+
+                'If Not IsLetter(letterBefore) And Not IsNumeric(letterBefore) Then
+                '     If secondLastChar = "s" Then
+                '        'MsgBox (selectionRange.Text & "[" & secondLastChar & "][" & lastChar & "]")
+                '        'MsgBox ("PLURAL WORD FOUND: " & suchstring & secondLastChar)
+                '
+                '        'check if next character is a letter or number, if yes dont consider as suchstring
+                '        If Not IsLetter(lastChar) And Not IsNumeric(lastChar) Then
+                '            'MsgBox (selectionRange.Text & "[" & secondLastChar & "][" & lastChar & "]")
+                '
+                '            'move selection to one character before word ends ('s' as extra letter)
+                '            selectionRange.MoveEnd wdCharacter, -1
+                '            selectionRange.InsertAfter ergaenzstring
+                '        End If
+                '    Else
+                '        'move selection to two character before word ends
+                '        selectionRange.MoveEnd wdCharacter, -2
+                '        selectionRange.InsertAfter ergaenzstring
+                '    End If
+               ' End If
 
 
 
@@ -386,14 +545,14 @@ Ende:
              ActiveWindow.View.MarkupMode = markup
              ActiveDocument.TrackRevisions = trackrev
 
-            Selection.HomeKey Unit:=wdStory
+            Selection.HomeKey unit:=wdStory
 
             'Suchparameter zurücksetzen
             With Selection.Find
                .ClearFormatting
                .Replacement.ClearFormatting
-               .Text = ""
-               .Replacement.Text = ""
+               .text = ""
+               .Replacement.text = ""
                .Forward = True
                .Wrap = wdFindContinue
                .Format = False
