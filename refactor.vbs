@@ -1,3 +1,4 @@
+
 Function IsLetter(char As String) As Boolean
     ' Convert the character to its ASCII code
     Dim charCode As Integer
@@ -170,11 +171,8 @@ End Function
 
 
 Function GetBezugArray(myPath As String) As Variant
-Dim result(1 To 2) As Variant
-
-
-
-
+    Dim result(1 To 2) As Variant
+    
     Open myPath For Input As #1
     Dim suchstring, strVariable As String
     Dim bezugArray() As String
@@ -189,27 +187,21 @@ Dim result(1 To 2) As Variant
         Line Input #1, strVariable
         i = i + 1: ReDim Preserve bezugArray(i)
         bezugArray(i) = strVariable
-
-        'PrÃƒÂ¼fung, ob Trennzeichen vorhanden
+        'Prüfung, ob Trennzeichen vorhanden
         If InStr(strVariable, "@") = 0 Then
             result(1) = "ENDE"
             Dim lol As String
-            lol = MsgBox("Trennzeichen (@) in Datei bezug.txt fehlt! Vorgang wird abge-brochen!", vbCritical, "TrennzeichenprÃ¼fung")
+            lol = MsgBox("Trennzeichen (@) in Datei bezug.txt fehlt! Vorgang wird abgebrochen!", vbCritical, "TrennzeichenprÃ¼fung")
             Close #1
             GetBezugArray = result
             Exit Function
-            'GoTo Ende
         End If
 
-        'PrÃƒÂ¼fung des Suchstrings
         suchstring = Left(bezugArray(i), InStr(bezugArray(i), "@") - 1)
-        'MsgBox ("suchstring before ergeanz: " & suchstring)
         l = l + 1: ReDim Preserve splitar(l)
         splitar(l) = suchstring
-        'Suchen
         Selection.HomeKey Unit:=wdStory
         Selection.Find.ClearFormatting
-
 
         With Selection.Find
             .text = suchstring
@@ -224,81 +216,135 @@ Dim result(1 To 2) As Variant
         End With
         Selection.Find.Execute
         If Selection.Find.Found = False Then
-            Dim msg As String
-            msg = MsgBox("Der Suchbegriff " & Chr(34) & suchstring & Chr(34) & " konnte nicht gefunden werden." & vbCrLf & vbCrLf & "Trotzdem fortfahren?", vbYesNo + vbCritical, "Suchen & ErgÃƒÂ¤nzen fehlgeschlagen!")
-            If msg = vbNo Then
+            If MsgBox("Der Suchbegriff " & Chr(34) & suchstring & Chr(34) & " konnte nicht gefunden werden." & vbCrLf & vbCrLf & "Trotzdem fortfahren?", vbYesNo + vbCritical, "Suchen & Ergänzen fehlgeschlagen!") = vbNo Then
                 'fix later: collect not founds in array and display yesNo Box
                 Close #1
-                result(1) = "ENDE" 'go to Ende
+                result(1) = "ENDE"
                 GetBezugArray = result
                 Exit Function
-                'GoTo Ende
             End If
         End If
-
     Loop
     Close #1
 
     If FoundDuplicate(splitar) Then
         MsgBox ("BZEE")
         result(1) = "DUPLICATE"
-        GetBezugArray = result
-        Exit Function
-    End If
-
-    'Datei leer?
-    If strVariable <> "" Then
-        result(1) = "OK" 'go to suchErsetz
+    ElseIf strVariable <> "" Then
+        result(1) = "OK"
         result(2) = bezugArray
-        GetBezugArray = result
-        Exit Function
-        'GoTo SuchErsetz
     Else
-        Dim msg2 As String
-        msg2 = MsgBox("Datei bezug.txt ist leer. Fortfahren mit manueller Eingabe?", vbYesNo, "InhaltsprÃ¼fung")
-        If msg2 = vbYes Then
-            result(1) = "DOCUMENT EMPTY" 'go to Sucheingabe
-            GetBezugArray = result
-            Exit Function
-            'GoTo Sucheingabe
+        If MsgBox("Datei bezug.txt ist leer. Fortfahren mit manueller Eingabe?", vbYesNo, "Inhaltsprüfung") = vbYes Then
+            result(1) = "DOCUMENT EMPTY"
         Else
-            result(1) = "ENDE" 'go to Ende
-            GetBezugArray = result
-            'GoTo Ende
+            result(1) = "ENDE"
         End If
     End If
-    result(1) = "OK" 'go to suchErsetz
-    result(2) = bezugArray
     GetBezugArray = result
 End Function
-
-
 Function getEnvironmentPath() As Variant
     Dim result(1 To 2) As Variant
     Dim path As String
-
-    'my thing to make it work for citrix:
-    path = "\\brefile11.esp.dom\citrixprofiles$\msg\Desktop\bezug.txt"
-    If Dir(path) <> "" Then
-        Dim msg1 As String
-        msg1 = MsgBox("Datei bezug.txt vorhanden. Fortfahren?", vbYesNo, "Dateiprüfung")
-        If msg1 = vbYes Then
-            result (1)
-            getEnvironmentPath = "WEITER" 'change
+    Dim debugState As Boolean
+    debugState = True
+    
+    If debugState = False Then
+        Dim user As String
+        Dim profil As String
+        
+        user = Environ("Username")
+        profil = Environ("AppData")
+        
+        'TXT-Datei auf SH-User-Desktop
+        If InStr(profil, "\sh\") <> 0 Then
+            path = "\\brefile01\profile$\" & user & "\sh\Desktop\" & "bezug.txt"
         Else
-            getEnvironmentPath = "ENDE"
+            path = "\\brefile11\userhomes$\" & user & "\Desktop\" & "bezug.txt"
         End If
-    Else
-        Dim msg2 As String
-        msg2 = MsgBox("Datei bezug.txt nicht vorhanden. Fortfahren mit manueller Eingabe?", vbYesNo, "Dateiprüfung")
-        If msg2 = vbYes Then
-            getEnvironmentPath = "SUCHEINGABE" 'change
+        If Dir(path) <> "" Then
+            If MsgBox("Datei bezug.txt nicht vorhanden. Fortfahren mit manueller Eingabe?", vbYesNo, "Dateiprüfung") = vbYes Then
+                result(1) = "SUCHEINGABE"
+            Else
+                result(1) = "ENDE"
+            End If
         Else
-            getEnvironmentPath = "ENDE"
+            If MsgBox("Datei bezug.txt vorhanden. Fortfahren?", vbYesNo, "DateiprÃ¼fung") = vbYes Then
+                result(1) = "OK"
+                result(2) = path
+            Else
+                result(1) = "ENDE"
+            End If
+        End If
+    Else 'delete this section later, only for me testing
+        'my thing to make it work for citrix:
+        path = "\\brefile11.esp.dom\citrixprofiles$\msg\Desktop\bezug.txt"
+        If Dir(path) <> "" Then
+            If MsgBox("Datei bezug.txt vorhanden. Fortfahren?", vbYesNo, "DateiprÃ¼fung") = vbYes Then
+                result(1) = "OK"
+                result(2) = path
+            Else
+                result(1) = "ENDE"
+            End If
+        Else
+            If MsgBox("Datei bezug.txt nicht vorhanden. Fortfahren mit manueller Eingabe?", vbYesNo, "DateiprÃ¼fung") = vbYes Then
+                result(1) = "SUCHEINGABE"
+            Else
+                result(1) = "ENDE"
+            End If
         End If
     End If
-
+    getEnvironmentPath = result
 End Function
+Function InvalidDocument() As Boolean
+    Dim response As String
+
+    'no documents open
+    If Documents.Count < 1 Then
+        response = MsgBox("Es ist kein Dokument geöffnet.", vbOKOnly + vbCritical, "Suchen & Ergänzen fehlgeschlagen!")
+        InvalidDocument = True
+        Exit Function
+    End If
+
+    'Anzahl der Zeichen, Shapes oder InlineShapes feststellen
+    effC = ActiveDocument.BuiltInDocumentProperties(wdPropertyCharsWSpaces)
+    effS = ActiveDocument.Shapes.Count
+    effI = ActiveDocument.InlineShapes.Count
+
+    'keine Zeichen, Shapes oder InlineShapes
+    If effC < 1 And effS < 1 And effI < 1 Then
+        response = MsgBox("Suchen & Ergänzen im leeren Dokument nicht möglich.", vbOKOnly + vbCritical, "Suchen & Ergänzen fehlgeschlagen!")
+        InvalidDocument = True
+        Exit Function
+    End If
+    InvalidDocument = False
+End Function
+
+Sub SetTrackingSettings(ByRef trackrev As Boolean, RyRef markup)
+    'Nachverfolgungseinstellungen sichern
+    trackrev = ActiveDocument.TrackRevisions
+    markup = ActiveWindow.View.MarkupMode
+
+    'Ã„nderung 19.01.2017: prÃ¼fen, ob nicht angenommene Ã„nderungen eines anderen Benutzers vorhanden sind
+    o = ActiveDocument.Revisions.Count
+    For p = 1 To o
+        If ActiveDocument.Revisions.Count <> 0 And ActiveDocument.Revisions(p).Author <> Application.UserName Then
+            MsgBox "ACHTUNG:" & vbCrLf & vbCrLf & "Nicht angenommene Ã„nderungen eines anderen Benutzers (" & ActiveDocument.Revisions(p).Author & ") vorhanden - nachtrÃ¤gliche ErgÃ¤nzungen beeinflussen diese Ã„nderungen!" & vbCrLf & vbCrLf & "Bitte anschlieÃŸend prÃ¼fen!", vbOKOnly + vbExclamation, "Suchen & ErgÃ¤nzen"
+            SetTrackingSettings = False
+            Exit Sub
+        End If
+    Next
+    
+    'wenn 'Änderungen verfolgen' deaktiviert ist -> aktivieren
+    If ActiveDocument.TrackRevisions = False Then
+        ActiveDocument.TrackRevisions = True
+    End If
+
+    'Sprechblasen-Einstellung auf balloon umstellen
+    ActiveWindow.View.MarkupMode = wdBalloonRevisions
+
+    'Erklärung
+    'Antwort9 = MsgBox(Mldg9, Stil9, Titel9)
+End Sub
 
 
 
@@ -309,11 +355,15 @@ Sub SuchErgaenzSpezial()
 'bearbeitet 10.03.2024 von Marie Mensing
 '
 
-'Public Type bzg
-'    Dim rangeArray() As Variant 'stores [range.start|range.end|bzgzeichen]
-'    Dim bezugArray() As String
-'End Type
 
+Public Type ahhh
+    markup
+    
+    trackrev
+
+    'Dim rangeArray() As Variant 'stores [range.start|range.end|bzgzeichen]
+    'Dim bezugArray() As String
+End Type
 
 
 
@@ -323,7 +373,7 @@ Dim Titel1, Titel2, Titel3, Titel4, Titel5, Titel6, Titel7, Titel8, Titel9, Tite
 Mldg1, Mldg2, Mldg3, Mldg4, Mldg5, Mldg6, Mldg7, Mldg8, Mldg9, Mldg10, Mldg11, Mldg12, Mldg13, _
 Stil1, Stil2, Stil3, Stil4, Stil5, Stil6, Stil7, Stil8, Stil9, Stil10, Stil11, Stil12, Stil13, _
 Antwort1, Antwort2, Antwort3, Antwort4, Antwort5, Antwort6, Antwort7, Antwort8, Antwort9, Antwort10, Antwort11, Antwort12, Antwort13
-Dim strVariable, suchstring, ergaenzstring, user, profil, Pfad, Server, ar(), splitar() As String
+Dim strVariable, suchstring, ergaenzstring, user, profil, Pfad, server, ar(), splitar() As String
 Dim i, k, l, m, n, o, p As Integer
 Dim effC As Variant
 Dim effS, effI As Integer
@@ -365,10 +415,10 @@ profil = Environ("AppData")
     Stil8 = vbCritical
     Titel8 = "TrennzeichenprÃ¼fung"
 
-    Mldg9 = "Sie kÃ¶nnen die Bezugsbezeichnungen per Datei oder manuell einfÃ¼gen." & vbCrLf & vbCrLf & _
+    Mldg9 = "Sie können die Bezugsbezeichnungen per Datei oder manuell einfügen." & vbCrLf & vbCrLf & _
     "Die Datei muss auf dem Desktop mit dem Dateinamen bezug.txt angelegt werden und muss folgende zeilenweise Syntax aufweisen:" & vbCrLf & vbCrLf & _
-    "Suchbegriff1@Bezugsbezeichnung1" & vbCrLf & "Suchbe-griff2@Bezugsbezeichnung2" & vbCrLf & "..." & vbCrLf & vbCrLf & _
-    "Bitte achten Sie bei den Suchbegriffen auf GroÃŸ-/Kleinschreibung sowie Ein-/Mehrzahl. Es wird nur nach ganzen WÃ¶rtern gesucht." & vbCrLf & "Die Bezugsbez-eichnung (nur Zahl, ohne Suchbegriff) wird beim EinfÃ¼gen automatisch in Klammern gesetzt." & vbCrLf & vbCrLf & "Die Datei bezug.txt wird abschlieÃŸend geleert."
+    "Suchbegriff1@Bezugsbezeichnung1" & vbCrLf & "Suchbegriff2@Bezugsbezeichnung2" & vbCrLf & "..." & vbCrLf & vbCrLf & _
+    "Es wird nur nach ganzen Wörtern gesucht." & vbCrLf & "Die Bezugsbezeichnung (nur Zahl, ohne Suchbegriff) wird beim Einfügen automatisch in Klammern gesetzt."
     Stil9 = vbInformation
     Titel9 = "ErklÃ¤rung"
 
@@ -389,92 +439,43 @@ profil = Environ("AppData")
     Titel13 = "Suchen & ErgÃ¤nzen fehlgeschlagen!"
 
 
-    'Abfrage, ob ein Dokument geÃ¶ffnet ist
-    If Documents.Count >= 1 Then
 
-        'Anzahl der Zeichen, Shapes oder InlineShapes feststellen
-        effC = ActiveDocument.BuiltInDocumentProperties(wdPropertyCharsWSpaces)
-        effS = ActiveDocument.Shapes.Count
-        effI = ActiveDocument.InlineShapes.Count
-
-        'Abfrage, ob Dokument Zeichen, Shapes oder InlineShapes enthÃ¤lt (auÃŸer Kopf- und FuÃŸzeile)
-        If effC >= 1 Or effS >= 1 Or effI >= 1 Then
-
-            'Nachverfolgungseinstellungen sichern
-            trackrev = ActiveDocument.TrackRevisions
-            markup = ActiveWindow.View.MarkupMode
-
-            'Ã„nderung 19.01.2017: prÃ¼fen, ob nicht angenommene Ã„nderungen eines anderen Benutzers vorhanden sind
-            o = ActiveDocument.Revisions.Count
-            For p = 1 To o
-                If ActiveDocument.Revisions.Count <> 0 And ActiveDocu-ment.Revisions(p).Author <> Application.UserName Then
-                    MsgBox "ACHTUNG:" & vbCrLf & vbCrLf & "Nicht angenommene Ã„nderungen eines anderen Benutzers (" & ActiveDocument.Revisions(p).Author & ") vorhanden - nachtrÃ¤gliche ErgÃ¤nzungen beeinflussen diese Ã„nderungen!" & vbCrLf & vbCrLf & "Bitte anschlieÃŸend prÃ¼fen!", vbOKOnly + vbExclamation, "Suchen & ErgÃ¤nzen"
-                    Exit For
-                End If
-            Next
-
-            'wenn 'Ã„nderungen verfolgen' deaktiviert ist -> aktivieren
-            If ActiveDocument.TrackRevisions = False Then
-                ActiveDocument.TrackRevisions = True
-            End If
-
-            'Sprechblasen-Einstellung auf balloon umstellen
-            ActiveWindow.View.MarkupMode = wdBalloonRevisions
-
-            'ErklÃ¤rung
-            Antwort9 = MsgBox(Mldg9, Stil9, Titel9)
-
-            Dim vals As Variant
-            vals = getEnvironmentPath()
-            If vals(1) = "ENDE" Then
-                GoTo Ende
-            ElseIf vals(1) = "SUCHEINGABE" Then
-                GoTo Sucheingabe
-            Else
-                'InsertBezuegszeichen (vals(2))
-                'GoTo Ende
-                Dim path As String
-                path = vals(2)
-                Dim bezugArray() As String
-                Dim values As Variant
-                values = GetBezugArray(path)
-                'MsgBox ("value(1): " & values(1))
-                If values(1) = "OK" Then
-                    bezugArray = values(2)
-                    GoTo SuchErsetz
-                ElseIf values(1) = "ENDE" Then
-                    GoTo Ende
-                ElseIf values(1) = "DUPLICATE" Then
-                    GoTo Ende
-                ElseIf values(1) = "DOCUMENT EMPTY" Then
-                    MsgBox ("document is empty lol, sucheingabe:")
-                    GoTo Sucheingabe
-                End If
-            End If
-
-        'sonst keine Zeichen, Shapes oder InlineShapes
-        Else
-            'Wenn leeres Dokument geÃ¶ffnet ist -> Fehlermeldung
-            Antwort13 = MsgBox(Mldg13, Stil13, Titel13)
-        End If
-    Else
-        'Wenn kein Dokument geÃ¶ffnet ist, Makro nicht ausfÃ¼hrbar -> Fehlermeldung
-        Antwort12 = MsgBox(Mldg12, Stil12, Titel12)
+    If InvalidDocument Then
+        GoTo Ende
     End If
+    
 
+    
+    SetTrackingSettings (trackrev, markup)
 
+    
+    
 
-Weiter:
-
-
-
-
-
-
-
-
-
-
+    
+    Dim vals As Variant
+    vals = getEnvironmentPath()
+    If vals(1) = "ENDE" Then
+        GoTo Ende
+    ElseIf vals(1) = "SUCHEINGABE" Then
+        GoTo Sucheingabe
+    Else
+        Dim path As String
+        path = vals(2)
+        Dim bezugArray() As String
+        Dim values As Variant
+        values = GetBezugArray(path)
+        Select Case values(1)
+            Case "OK"
+                bezugArray = values(2)
+                GoTo SuchErsetz
+            Case "ENDE"
+                GoTo Ende
+            Case "DUPLICATE"
+                GoTo Ende
+            Case "DOCUMENT EMPTY"
+                GoTo Sucheingabe
+        End Select
+    End If
 
 
 Sucheingabe:
@@ -559,31 +560,24 @@ SuchErsetz:
             i = (UBound(bezugArray) - LBound(bezugArray) + 1) - 1
             For k = 1 To i
                 suchstring = Left(bezugArray(k), InStr(bezugArray(k), "@") - 1)
-                ergaenzstring = " (" & Right(bezugArray(k), Len(bezugArray(k)) - In-Str(bezugArray(k), "@")) & ")"
-
+                ergaenzstring = " (" & Right(bezugArray(k), Len(bezugArray(k)) - InStr(bezugArray(k), "@")) & ")"
                 Dim selectionRange As Range
                 Set selectionRange = ActiveDocument.Range
-
                 Dim text As String
                 text = GetFindText(suchstring)
-
-                Do While selectionRange.Find.Execute(FindText:=text, MatchAllWord-Forms:=False, MatchSoundsLike:=False, MatchWildcards:=True, Forward:=True) = True
+                Do While selectionRange.Find.Execute(FindText:=text, MatchAllWordForms:=False, MatchSoundsLike:=False, MatchWildcards:=True, Forward:=True) = True
                     Dim letterAfter As String
                     letterAfter = getLetterAfter(selectionRange)
                     Dim secondLetterAfter As String
                     secondLetterAfter = getSecondLetterAfter(selectionRange)
                     'MsgBox (selectionRange.text & "[" & letterAfter & "][" & secondLetterAfter & "]")
-
                     Dim letterBefore As String
                     letterBefore = getLetterBefore(selectionRange)
-
-
-                    If (Not IsLetter(letterBefore) And Not IsNumeric(letterBefore)) Or letterBe-fore = "BOF" Then
-
-                        'MsgBox (selectionRange.text & "[" & letterAfter & "][" & secondLetter-After & "]")
+                    If (Not IsLetter(letterBefore) And Not IsNumeric(letterBefore)) Or letterBefore = "BOF" Then
+                        'MsgBox (selectionRange.text & "[" & letterAfter & "][" & secondLetterAfter & "]")
                         If letterAfter = "s" Then
                             'check if next character is a letter or number, if yes dont consider as suchstring
-                            If Not (IsLetter(secondLetterAfter) And Not IsNumer-ic(secondLetterAfter)) Or secondLetterAfter = "EOF" Then
+                            If Not (IsLetter(secondLetterAfter) And Not IsNumeric(secondLetterAfter)) Or secondLetterAfter = "EOF" Then
                                 'move selection to one character before word ends ('s' as extra letter)
                                 selectionRange.MoveEnd wdCharacter
                                 selectionRange.InsertAfter ergaenzstring
@@ -595,41 +589,39 @@ SuchErsetz:
                     End If
                     selectionRange.Collapse wdCollapseEnd
                 Loop
-
             Next
-
 Leeren:
 
-            'If Antwort6 = vbYes Then
-            '    'MsgBox "Datei bezug.txt wird geleert."
-            '    'Datei leeren
-            '    Open Server & user & Pfad & "bezug.txt" For Output As #1
-            '    Close #1
-            'End If
+        'If Antwort6 = vbYes Then
+        '    'MsgBox "Datei bezug.txt wird geleert."
+        '    'Datei leeren
+        '    Open Server & user & Pfad & "bezug.txt" For Output As #1
+        '    Close #1
+        'End If
 
 Ende:
-            MsgBox ("ENDE")
-            'Nachverfolgungseinstellungen wiederherstellen
-             ActiveWindow.View.MarkupMode = markup
-             ActiveDocument.TrackRevisions = trackrev
+    MsgBox ("ENDE")
+    'Nachverfolgungseinstellungen wiederherstellen
+     ActiveWindow.View.MarkupMode = markup
+     ActiveDocument.TrackRevisions = trackrev
 
-            Selection.HomeKey Unit:=wdStory
+    Selection.HomeKey Unit:=wdStory
 
-            'Suchparameter zurÃ¼cksetzen
-            With Selection.Find
-               .ClearFormatting
-               .Replacement.ClearFormatting
-               .text = ""
-               .Replacement.text = ""
-               .Forward = True
-               .Wrap = wdFindContinue
-               .Format = False
-               .MatchCase = False
-               .MatchWholeWord = False
-               .MatchWildcards = False
-               .MatchSoundsLike = False
-               .MatchAllWordForms = False
-            End With
+    'Suchparameter zurÃ¼cksetzen
+    With Selection.Find
+       .ClearFormatting
+       .Replacement.ClearFormatting
+       .text = ""
+       .Replacement.text = ""
+       .Forward = True
+       .Wrap = wdFindContinue
+       .Format = False
+       .MatchCase = False
+       .MatchWholeWord = False
+       .MatchWildcards = False
+       .MatchSoundsLike = False
+       .MatchAllWordForms = False
+    End With
 
 
 End Sub
