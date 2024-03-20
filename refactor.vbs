@@ -13,11 +13,13 @@ End Function
 
 Function GetFindText(suchstring) As String
     Dim lowercase As String
-    lowercase = LCase(Left(suchstring, 1))
     Dim uppercase As String
-    uppercase = UCase(lowercase)
     Dim cutFirstLetter As String
+
+    lowercase = LCase(left(suchstring, 1))
+    uppercase = UCase(lowercase)
     cutFirstLetter = Mid(suchstring, 2)
+
     GetFindText = "[" & lowercase & "," & uppercase & "]" & cutFirstLetter
 End Function
 
@@ -79,7 +81,6 @@ Function getSecondLetterAfter(rangeObj As Range) As String
     getSecondLetterAfter = letterAfter
 End Function
 
-
 Function FoundDuplicate(splitar() As String) As Boolean
     Dim i As Integer
     Dim m As Integer
@@ -103,7 +104,6 @@ Function FoundDuplicate(splitar() As String) As Boolean
             End If
         Next n
     Next m
-
     ' If no duplicates are found
     FoundDuplicate = False
 End Function
@@ -120,21 +120,21 @@ Function GetBezugArray(myPath As String) As Variant
     i = 0
 
     Do While Not EOF(1)
-        'Änderung 19.01.2017: Befehl "Line" hinzugefüt (Zeile samt Komma als String einlesen), damit mehrere kommagetrennte Bezugszeichen benutzt werden kÃƒÆ’Ã‚Â¶nnen
+        'Ãƒâ€žnderung 19.01.2017: Befehl "Line" hinzugefÃƒÂ¼t (Zeile samt Komma als String einlesen), damit mehrere kommagetrennte Bezugszeichen benutzt werden kÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¶nnen
         Line Input #1, strVariable
         i = i + 1: ReDim Preserve bezugArray(i)
         bezugArray(i) = strVariable
-        'Prüfung, ob Trennzeichen vorhanden
+        'PrÃƒÂ¼fung, ob Trennzeichen vorhanden
         If InStr(strVariable, "@") = 0 Then
             result(1) = "ENDE"
             Dim lol As String
-            lol = MsgBox("Trennzeichen (@) in Datei bezug.txt fehlt! Vorgang wird abgebrochen!", vbCritical, "Trennzeichenprüfung")
+            lol = MsgBox("Trennzeichen (@) in Datei bezug.txt fehlt! Vorgang wird abgebrochen!", vbCritical, "TrennzeichenprÃƒÂ¼fung")
             Close #1
             GetBezugArray = result
             Exit Function
         End If
 
-        suchstring = Left(bezugArray(i), InStr(bezugArray(i), "@") - 1)
+        suchstring = left(bezugArray(i), InStr(bezugArray(i), "@") - 1)
         l = l + 1: ReDim Preserve splitar(l)
         splitar(l) = suchstring
         Selection.HomeKey Unit:=wdStory
@@ -153,7 +153,7 @@ Function GetBezugArray(myPath As String) As Variant
         End With
         Selection.Find.Execute
         If Selection.Find.Found = False Then
-            If MsgBox("Der Suchbegriff " & Chr(34) & suchstring & Chr(34) & " konnte nicht gefunden werden." & vbCrLf & vbCrLf & "Trotzdem fortfahren?", vbYesNo + vbCritical, "Suchen & ErgÃ¤nzen fehlgeschlagen!") = vbNo Then
+            If MsgBox("Der Suchbegriff " & Chr(34) & suchstring & Chr(34) & " konnte nicht gefunden werden." & vbCrLf & vbCrLf & "Trotzdem fortfahren?", vbYesNo + vbCritical, "Suchen & ErgÃƒÆ’Ã‚Â¤nzen fehlgeschlagen!") = vbNo Then
                 'fix later: collect not founds in array and display yesNo Box
                 Close #1
                 result(1) = "ENDE"
@@ -171,7 +171,7 @@ Function GetBezugArray(myPath As String) As Variant
         result(1) = "OK"
         result(2) = bezugArray
     Else
-        If MsgBox("Datei bezug.txt ist leer. Fortfahren mit manueller Eingabe?", vbYesNo, "InhaltsprÃ¼fung") = vbYes Then
+        If MsgBox("Datei bezug.txt ist leer. Fortfahren mit manueller Eingabe?", vbYesNo, "InhaltsprÃƒÆ’Ã‚Â¼fung") = vbYes Then
             result(1) = "DOCUMENT EMPTY"
         Else
             result(1) = "ENDE"
@@ -199,13 +199,13 @@ Function getEnvironmentPath() As Variant
             path = "\\brefile11\userhomes$\" & user & "\Desktop\" & "bezug.txt"
         End If
         If Dir(path) <> "" Then
-            If MsgBox("Datei bezug.txt nicht vorhanden. Fortfahren mit manueller Eingabe?", vbYesNo, "DateiprÃ¼fung") = vbYes Then
+            If MsgBox("Datei bezug.txt nicht vorhanden. Fortfahren mit manueller Eingabe?", vbYesNo, "DateiprÃƒÆ’Ã‚Â¼fung") = vbYes Then
                 result(1) = "SUCHEINGABE"
             Else
                 result(1) = "ENDE"
             End If
         Else
-            If MsgBox("Datei bezug.txt vorhanden. Fortfahren?", vbYesNo, "DateiprÃƒÂ¼fung") = vbYes Then
+            If MsgBox("Datei bezug.txt vorhanden. Fortfahren?", vbYesNo, "DateiprÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¼fung") = vbYes Then
                 result(1) = "OK"
                 result(2) = path
             Else
@@ -216,14 +216,14 @@ Function getEnvironmentPath() As Variant
         'my thing to make it work for citrix:
         path = "\\brefile11.esp.dom\citrixprofiles$\msg\Desktop\bezug.txt"
         If Dir(path) <> "" Then
-            If MsgBox("Datei bezug.txt vorhanden. Fortfahren?", vbYesNo, "DateiprÃƒÂ¼fung") = vbYes Then
+            If MsgBox("Datei bezug.txt vorhanden. Fortfahren?", vbYesNo, "DateiprÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¼fung") = vbYes Then
                 result(1) = "OK"
                 result(2) = path
             Else
                 result(1) = "ENDE"
             End If
         Else
-            If MsgBox("Datei bezug.txt nicht vorhanden. Fortfahren mit manueller Eingabe?", vbYesNo, "DateiprÃƒÂ¼fung") = vbYes Then
+            If MsgBox("Datei bezug.txt nicht vorhanden. Fortfahren mit manueller Eingabe?", vbYesNo, "DateiprÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¼fung") = vbYes Then
                 result(1) = "SUCHEINGABE"
             Else
                 result(1) = "ENDE"
@@ -239,7 +239,7 @@ Function InvalidDocument() As Boolean
 
     'no documents open
     If Documents.Count < 1 Then
-        response = MsgBox("Es ist kein Dokument geöffnet.", vbOKOnly + vbCritical, "Suchen & ErgÃ¤nzen fehlgeschlagen!")
+        response = MsgBox("Es ist kein Dokument geÃƒÂ¶ffnet.", vbOKOnly + vbCritical, "Suchen & ErgÃƒÂ¤nzen fehlgeschlagen!")
         InvalidDocument = True
         Exit Function
     End If
@@ -251,7 +251,7 @@ Function InvalidDocument() As Boolean
 
     'keine Zeichen, Shapes oder InlineShapes
     If effC < 1 And effS < 1 And effI < 1 Then
-        response = MsgBox("Suchen & ErgÃ¤nzen im leeren Dokument nicht mÃ¶glich.", vbOKOnly + vbCritical, "Suchen & ErgÃ¤nzen fehlgeschlagen!")
+        response = MsgBox("Suchen & ErgÃƒÆ’Ã‚Â¤nzen im leeren Dokument nicht mÃƒÆ’Ã‚Â¶glich.", vbOKOnly + vbCritical, "Suchen & ErgÃƒÆ’Ã‚Â¤nzen fehlgeschlagen!")
         InvalidDocument = True
         Exit Function
     End If
@@ -260,16 +260,16 @@ End Function
 
 Sub SetTrackingSettings()
     Dim o, p As Integer
-    'Änderung 19.01.2017: prüfen, ob nicht angenommene Änderungen eines anderen Benutzers vorhanden sind
+    'Ãƒâ€žnderung 19.01.2017: prÃƒÂ¼fen, ob nicht angenommene Ãƒâ€žnderungen eines anderen Benutzers vorhanden sind
     o = ActiveDocument.Revisions.Count
     For p = 1 To o
         If ActiveDocument.Revisions.Count <> 0 And ActiveDocument.Revisions(p).Author <> Application.UserName Then
-            MsgBox "ACHTUNG:" & vbCrLf & vbCrLf & "Nicht angenommene Ãƒâ€žnderungen eines anderen Benutzers (" & ActiveDocument.Revisions(p).Author & ") vorhanden - nachtrÃƒÂ¤gliche ErgÃƒÂ¤nzungen beeinflussen diese Ãƒâ€žnderungen!" & vbCrLf & vbCrLf & "Bitte anschlieÃƒÅ¸end prÃƒÂ¼fen!", vbOKOnly + vbExclamation, "Suchen & ErgÃƒÂ¤nzen"
+            MsgBox "ACHTUNG:" & vbCrLf & vbCrLf & "Nicht angenommene ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾nderungen eines anderen Benutzers (" & ActiveDocument.Revisions(p).Author & ") vorhanden - nachtrÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤gliche ErgÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤nzungen beeinflussen diese ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾nderungen!" & vbCrLf & vbCrLf & "Bitte anschlieÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â¸end prÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¼fen!", vbOKOnly + vbExclamation, "Suchen & ErgÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤nzen"
             Exit Sub
         End If
     Next
 
-    'wenn 'Ã„nderungen verfolgen' deaktiviert ist -> aktivieren
+    'wenn 'ÃƒÆ’Ã¢â‚¬Å¾nderungen verfolgen' deaktiviert ist -> aktivieren
     If ActiveDocument.TrackRevisions = False Then
         ActiveDocument.TrackRevisions = True
     End If
@@ -277,13 +277,153 @@ Sub SetTrackingSettings()
     'Sprechblasen-Einstellung auf balloon umstellen
     ActiveWindow.View.MarkupMode = wdBalloonRevisions
 
-    'Erklärung
-    Antwort9 = MsgBox("Die Datei muss auf dem Desktop mit dem Dateinamen bezug.txt angelegt werden und muss folgende zeilenweise Syntax aufweisen:" & vbCrLf & vbCrLf & _
+    'ErklÃƒÂ¤rung
+    Dim response As String
+    response = MsgBox("Die Datei muss auf dem Desktop mit dem Dateinamen bezug.txt angelegt werden und muss folgende zeilenweise Syntax aufweisen:" & vbCrLf & vbCrLf & _
     "Suchbegriff1@Bezugsbezeichnung1" & vbCrLf & "Suchbegriff2@Bezugsbezeichnung2" & vbCrLf & "..." & vbCrLf & vbCrLf & _
-    "Es wird nur nach ganzen Wörtern gesucht." & vbCrLf & "Die Bezugsbezeichnung (nur Zahl, ohne Suchbegriff) wird beim Einfügen automatisch in Klammern gesetzt.", vbInformation, "Erklärung")
+    "Es wird nur nach ganzen WÃƒÂ¶rtern gesucht." & vbCrLf & "Die Bezugsbezeichnung (nur Zahl, ohne Suchbegriff) wird beim EinfÃƒÂ¼gen automatisch in Klammern gesetzt.", vbInformation, "ErklÃƒÂ¤rung")
 End Sub
 
+Sub SortArrayByStringLength(inputArray As Variant)
+    Dim temp As String
+    Dim i As Integer, j As Integer
 
+    ' Perform sorting using bubble sort algorithm
+    For i = LBound(inputArray) To UBound(inputArray)
+        ' Skip empty lines or lines without "@" symbol
+        If Len(inputArray(i)) > 0 And InStr(inputArray(i), "@") > 0 Then
+            For j = i + 1 To UBound(inputArray)
+                ' Skip empty lines or lines without "@" symbol
+                If Len(inputArray(j)) > 0 And InStr(inputArray(j), "@") > 0 Then
+                    ' Extract the string before the "@" symbol for comparison
+                    Dim string1 As String
+                    Dim string2 As String
+                    string1 = left(inputArray(i), InStr(inputArray(i), "@") - 1)
+                    string2 = left(inputArray(j), InStr(inputArray(j), "@") - 1)
+
+                    ' Compare lengths and swap if necessary
+                    If Len(string1) < Len(string2) Then
+                        temp = inputArray(i)
+                        inputArray(i) = inputArray(j)
+                        inputArray(j) = temp
+                    End If
+                End If
+            Next j
+        End If
+    Next i
+End Sub
+
+Function GetRangesArray(bezugArray() As String) As Variant()
+    Dim i, k, numCol As Integer
+    Dim suchstring, ergaenzstring As String
+    Dim rangesArray() As Variant
+
+    numCol = 0
+    'ReDim rangesArray(1 To 1, 1 To 3)
+    i = (UBound(bezugArray) - LBound(bezugArray) + 1) - 1
+    For k = 1 To i
+        suchstring = left(bezugArray(k), InStr(bezugArray(k), "@") - 1)
+        ergaenzstring = " (" & right(bezugArray(k), Len(bezugArray(k)) - InStr(bezugArray(k), "@")) & ")"
+
+        'MsgBox ("HERE: suchstring: " & suchstring & "| number: " & ergaenzstring)
+
+        Dim selectionRange As Range
+        Set selectionRange = ActiveDocument.Range
+        Dim text As String
+        text = GetFindText(suchstring)
+        Do While selectionRange.Find.Execute(FindText:=text, MatchAllWordForms:=False, MatchSoundsLike:=False, MatchWildcards:=True, Forward:=True) = True
+            Dim letterAfter As String
+            Dim secondLetterAfter As String
+            Dim letterBefore As String
+
+            letterAfter = getLetterAfter(selectionRange)
+            secondLetterAfter = getSecondLetterAfter(selectionRange)
+            letterBefore = getLetterBefore(selectionRange)
+
+            If (Not IsLetter(letterBefore) And Not IsNumeric(letterBefore)) Or letterBefore = "BOF" Then
+                If letterAfter = "s" Then
+                    'check if next character is a letter or number, if yes dont consider as suchstring
+                    If Not (IsLetter(secondLetterAfter) And Not IsNumeric(secondLetterAfter)) Or secondLetterAfter = "EOF" Then
+                        'move selection to one character before word ends ('s' as extra letter)
+                        'MsgBox ("FOUND RANGE: word: " & text & " Range.start: " & selectionRange.Start & " End: " & selectionRange.End + 1)
+
+                        'MsgBox ("numCol: " & numCol)
+
+                        ' Resize the array to accommodate one more row
+                        ReDim Preserve rangesArray(3, numCol + 1)
+
+                        ' Add the new item to the last row
+                        rangesArray(1, numCol) = selectionRange.Start
+                        rangesArray(2, numCol) = selectionRange.End + 1
+                        rangesArray(3, numCol) = ergaenzstring
+                        'MsgBox (rangesArray(1, numCol + 1) & ": 2: " & rangesArray(2, numCol + 1) & ": 3: " & rangesArray(3, numCol + 1))
+
+                        ' Increment the number of rows
+                        numCol = numCol + 1
+
+                        selectionRange.MoveEnd wdCharacter
+                        'selectionRange.InsertAfter ergaenzstring
+                    End If
+                ElseIf (Not IsLetter(letterAfter) And Not IsNumeric(letterAfter)) Or letterAfter = "EOF" Then
+                    'move selection to two character before word ends
+                    'MsgBox ("FOUND RANGE: word: " & text & " Range.start: " & selectionRange.Start & " End: " & selectionRange.End)
+                    'selectionRange.InsertAfter ergaenzstring
+                    'MsgBox ("numCol: " & numCol)
+                    ReDim Preserve rangesArray(3, numCol + 1)
+
+                    ' Add the new item to the last row
+                    rangesArray(1, numCol) = selectionRange.Start
+                    rangesArray(2, numCol) = selectionRange.End
+                    rangesArray(3, numCol) = ergaenzstring
+                    'MsgBox (rangesArray(1, numCol + 1) & ": 2: " & rangesArray(2, numCol + 1) & ": 3: " & rangesArray(3, numCol + 1))
+
+                    ' Increment the number of rows
+                    numCol = numCol + 1
+                End If
+            End If
+            selectionRange.Collapse wdCollapseEnd
+        Loop
+    Next
+
+    'Dim q As Integer, j As Integer
+
+    'For q = LBound(rangesArray, 2) To UBound(rangesArray, 2) - 1
+        'For j = LBound(rangesArray, 2) To UBound(rangesArray, 2)
+    '        MsgBox ("Range.Start: " & rangesArray(1, q) & " Range.End: " & rangesArray(2, q) & " Nbr: " & rangesArray(3, q))
+        'Next j
+    'Next q
+    GetRangesArray = rangesArray
+End Function
+
+Sub InsertNumbers(rangesArray() As Variant)
+
+End Sub
+
+Function NewSuchErsetz(bezugArray() As String)
+    MsgBox ("coming soon")
+
+    '- sort array of bezugArray (biggest first)
+    SortArrayByStringLength bezugArray
+
+
+    '- iterate through array & store found texts ranges in 3 times X array, third position is bezugszeichen (range.start | range.end | number to insert)
+    Dim rangesArray() As Variant
+    rangesArray = GetRangesArray(bezugArray)
+
+    Dim q As Integer
+    For q = LBound(rangesArray, 2) To UBound(rangesArray, 2) - 1
+        MsgBox ("Range.Start: " & rangesArray(1, q) & " Range.End: " & rangesArray(2, q) & " Nbr: " & rangesArray(3, q))
+    Next q
+
+
+    InsertNumbers rangesArray
+
+
+'- for every following string, check if found string is in the 3X array if yes, skip it
+'- iterate backwards through text and insert specific numbers after range end
+
+
+End Function
 
 Sub SuchErgaenzSpezial()
 
@@ -292,79 +432,18 @@ Sub SuchErgaenzSpezial()
 'bearbeitet 10.03.2024 von Marie Mensing
 '
 
-
-
 'Variablen setzen
 Dim markup, trackrev
-Dim Titel1, Titel2, Titel3, Titel4, Titel5, Titel6, Titel7, Titel8, Titel9, Titel10, Titel11, Titel12, Titel13, _
-Mldg1, Mldg2, Mldg3, Mldg4, Mldg5, Mldg6, Mldg7, Mldg8, Mldg9, Mldg10, Mldg11, Mldg12, Mldg13, _
-Stil1, Stil2, Stil3, Stil4, Stil5, Stil6, Stil7, Stil8, Stil9, Stil10, Stil11, Stil12, Stil13, _
-Antwort1, Antwort2, Antwort3, Antwort4, Antwort5, Antwort6, Antwort7, Antwort8, Antwort9, Antwort10, Antwort11, Antwort12, Antwort13
-Dim strVariable, suchstring, ergaenzstring, user, profil, Pfad, server, ar(), splitar() As String
+Dim Titel5, Mldg5, Stil5, Antwort5
+Dim suchstring, ergaenzstring, Pfad, ar() As String
 Dim i, k, l, m, n, o, p As Integer
 
-ReDim ar(0), splitar(0)
+ReDim ar(0)
 i = 0
-user = Environ("Username")
-profil = Environ("AppData")
 
-    'Meldungen erstellen
-    Mldg1 = "Suchen & ErgÃƒÂ¤nzen kann nicht stattfinden, weil der Suchbegriff nicht gefunden werden konnte."
-    Stil1 = vbOKOnly + vbCritical
-    Titel1 = "Suchen & ErgÃƒÂ¤nzen fehlgeschlagen!"
-
-    'Mldg2 = "Bitte geben Sie den " & (i + 1) & ". Suchbegriff ein:"
-    'Stil2 = vbOKOnly
-    Titel2 = "Eingabe des Suchbegriffs"
-
-    'Mldg3 = "Bitte geben Sie den " & (i + 1) & ". Begriff ein, um den Sie den " & (i + 1) & ". Suchbegriff ergÃƒÂ¤nzen mÃƒÂ¶chten:"
-    'Stil3 = vbOKOnly
-    Titel3 = "Eingabe der Bezugsbezeichnung"
-
-    Mldg4 = "Suchen & ErgÃƒÂ¤nzen kann nicht stattfinden, weil kein Suchbegriff / keine ErgÃƒÂ¤nzung eingegeben wurde."
-    Stil4 = vbRetryCancel
-    Titel4 = "Suchen & ErgÃƒÂ¤nzen fehlgeschlagen!"
-
-    Mldg5 = "Suchen & ErgÃƒÂ¤nzen durch Abbruch beendet."
+    Mldg5 = "Suchen & Ergänzen durch Abbruch beendet."
     Stil5 = vbInformation
-    Titel5 = "Suchen & ErgÃƒÂ¤nzen abgebrochen!"
-
-    Mldg6 = "Datei bezug.txt vorhanden. Fortfahren?"
-    Stil6 = vbYesNo
-    Titel6 = "DateiprÃƒÂ¼fung"
-
-    Mldg7 = "Datei bezug.txt nicht vorhanden. Fortfahren mit manueller Eingabe?"
-    Stil7 = vbYesNo
-    Titel7 = "DateiprÃƒÂ¼fung"
-
-    Mldg8 = "Trennzeichen (@) in Datei bezug.txt fehlt! Vorgang wird abgebrochen!"
-    Stil8 = vbCritical
-    Titel8 = "TrennzeichenprÃƒÂ¼fung"
-
-    Mldg9 = "Sie kÃ¶nnen die Bezugsbezeichnungen per Datei oder manuell einfÃ¼gen." & vbCrLf & vbCrLf & _
-    "Die Datei muss auf dem Desktop mit dem Dateinamen bezug.txt angelegt werden und muss folgende zeilenweise Syntax aufweisen:" & vbCrLf & vbCrLf & _
-    "Suchbegriff1@Bezugsbezeichnung1" & vbCrLf & "Suchbegriff2@Bezugsbezeichnung2" & vbCrLf & "..." & vbCrLf & vbCrLf & _
-    "Es wird nur nach ganzen WÃ¶rtern gesucht." & vbCrLf & "Die Bezugsbezeichnung (nur Zahl, ohne Suchbegriff) wird beim EinfÃ¼gen automatisch in Klammern gesetzt."
-    Stil9 = vbInformation
-    Titel9 = "ErklÃƒÂ¤rung"
-
-    Mldg10 = "Datei bezug.txt ist leer. Fortfahren mit manueller Eingabe?"
-    Stil10 = vbYesNo
-    Titel10 = "InhaltsprÃƒÂ¼fung"
-
-    Mldg11 = "MÃƒÂ¶chten Sie weitere Bezugsbezeichnungen einfÃƒÂ¼gen?"
-    Stil11 = vbYesNo
-    Titel11 = "Wiederholung"
-
-    Mldg12 = "Es ist kein Dokument geÃƒÂ¶ffnet."
-    Stil12 = vbOKOnly + vbCritical
-    Titel12 = "Suchen & ErgÃƒÂ¤nzen fehlgeschlagen!"
-
-    Mldg13 = "Suchen & ErgÃƒÂ¤nzen im leeren Dokument nicht mÃƒÂ¶glich."
-    Stil13 = vbOKOnly + vbCritical
-    Titel13 = "Suchen & ErgÃƒÂ¤nzen fehlgeschlagen!"
-
-
+    Titel5 = "Suchen & Ergänzen abgebrochen!"
 
     If InvalidDocument Then
         GoTo Ende
@@ -373,7 +452,6 @@ profil = Environ("AppData")
     'Nachverfolgungseinstellungen sichern
     trackrev = ActiveDocument.TrackRevisions
     markup = ActiveWindow.View.MarkupMode
-
     SetTrackingSettings
 
     Dim vals As Variant
@@ -391,7 +469,9 @@ profil = Environ("AppData")
         Select Case values(1)
             Case "OK"
                 bezugArray = values(2)
-                GoTo SuchErsetz
+                NewSuchErsetz bezugArray
+                GoTo Ende
+                'GoTo SuchErsetz
             Case "ENDE"
                 GoTo Ende
             Case "DUPLICATE"
@@ -402,10 +482,9 @@ profil = Environ("AppData")
     End If
     GoTo Ende
 
-
 Sucheingabe:
     'Suchstring
-    suchstring = InputBox("Bitte geben Sie den " & (i + 1) & ". Suchbegriff ein:", Titel2)
+    suchstring = InputBox("Bitte geben Sie den " & (i + 1) & ". Suchbegriff ein:", "Eingabe des Suchbegriffs")
 
     'Suchstring Cancel?
     If StrPtr(suchstring) = 0 Then
@@ -414,8 +493,7 @@ Sucheingabe:
     Else
         'OK und kein Suchstring?
         If Len(suchstring) = 0 Then
-            Antwort4 = MsgBox(Mldg4, Stil4, Titel4)
-            If Antwort4 = vbRetry Then
+            If MsgBox("Suchen & Ergänzen kann nicht stattfinden, weil kein Suchbegriff / keine Ergänzung eingegeben wurde.", vbRetryCancel, "Suchen & ErgÃƒÂ¤nzen fehlgeschlagen!") = vbRetry Then
                 GoTo Sucheingabe:
             Else
                 Antwort5 = MsgBox(Mldg5, Stil5, Titel5)
@@ -441,13 +519,14 @@ Sucheingabe:
     Selection.Find.Execute
 
     If Selection.Find.Found = False Then
-        Antwort1 = MsgBox("Suchen & Ergänzen kann nicht stattfinden, weil der Suchbegriff " & Chr(34) & suchstring & Chr(34) & " nicht gefunden werden konnte.", vbOKOnly + vbCritical, "Suchen & ErgÃƒÂ¤nzen fehlgeschlagen!")
+        Dim response As String
+        response = MsgBox("Suchen & Ergänzen kann nicht stattfinden, weil der Suchbegriff " & Chr(34) & suchstring & Chr(34) & " nicht gefunden werden konnte.", vbOKOnly + vbCritical, "Suchen & ErgÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤nzen fehlgeschlagen!")
         GoTo Ende
     End If
 
 Ergaenzeingabe:
     'Ergaenzstring
-    ergaenzstring = InputBox("Bitte geben Sie die " & (i + 1) & ". Bezugsbezeichnung ein, um die Sie den " & (i + 1) & ". Suchbegriff ergÃƒÂ¤nzen mÃƒÂ¶chten:", Titel3)
+    ergaenzstring = InputBox("Bitte geben Sie die " & (i + 1) & ". Bezugsbezeichnung ein, um die Sie den " & (i + 1) & ". Suchbegriff ergÃƒÂ¤nzen mÃƒÂ¶chten:", "Eingabe der Bezugsbezeichnung")
 
     'Ergaenzstring Cancel?
     If StrPtr(ergaenzstring) = 0 Then
@@ -457,8 +536,7 @@ Ergaenzeingabe:
 
         'OK und kein Suchstring?
         If Len(ergaenzstring) = 0 Then
-            Antwort4 = MsgBox(Mldg4, Stil4, Titel4)
-            If Antwort4 = vbRetry Then
+            If MsgBox("Suchen & Ergänzen kann nicht stattfinden, weil kein Suchbegriff / keine ErgÃƒÂ¤nzung eingegeben wurde.", vbRetryCancel, "Suchen & ErgÃƒÂ¤nzen fehlgeschlagen!") = vbRetry Then
                 GoTo Ergaenzeingabe:
             Else
                 Antwort5 = MsgBox(Mldg5, Stil5, Titel5)
@@ -471,15 +549,15 @@ Ergaenzeingabe:
     i = i + 1: ReDim Preserve ar(i)
     ar(i) = suchstring & "@" & ergaenzstring
 
-    If MsgBox("Möchten Sie weitere Bezugsbezeichnungen einfügen?", vbYesNo, "Wiederholung") = vbYes Then
+    If MsgBox("MÃƒÂ¶chten Sie weitere Bezugsbezeichnungen einfÃƒÂ¼gen?", vbYesNo, "Wiederholung") = vbYes Then
         GoTo Sucheingabe
     End If
 
 SuchErsetz:
     i = (UBound(bezugArray) - LBound(bezugArray) + 1) - 1
     For k = 1 To i
-        suchstring = Left(bezugArray(k), InStr(bezugArray(k), "@") - 1)
-        ergaenzstring = " (" & Right(bezugArray(k), Len(bezugArray(k)) - InStr(bezugArray(k), "@")) & ")"
+        suchstring = left(bezugArray(k), InStr(bezugArray(k), "@") - 1)
+        ergaenzstring = " (" & right(bezugArray(k), Len(bezugArray(k)) - InStr(bezugArray(k), "@")) & ")"
         Dim selectionRange As Range
         Set selectionRange = ActiveDocument.Range
         Dim text As String
@@ -517,7 +595,7 @@ Ende:
 
     Selection.HomeKey Unit:=wdStory
 
-    'Suchparameter zurücksetzen
+    'Suchparameter zurÃƒÂ¼cksetzen
     With Selection.Find
        .ClearFormatting
        .Replacement.ClearFormatting
