@@ -1,9 +1,6 @@
 Function IsLetter(char As String) As Boolean
-    ' Convert the character to its ASCII code
     Dim charCode As Integer
     charCode = Asc(UCase(char))
-
-    ' Check if the character code is within the range of uppercase letters
     If charCode >= Asc("A") And charCode <= Asc("Z") Then
         IsLetter = True
     Else
@@ -23,8 +20,8 @@ Function GetFindText(suchstring) As String
     GetFindText = "[" & lowercase & "," & uppercase & "]" & cutFirstLetter
 End Function
 
-Function getLetterBefore(rangeObj As Range) As String
-    Dim copyRange As Range
+Function getLetterBefore(rangeObj As range) As String
+    Dim copyRange As range
     Set copyRange = rangeObj.Duplicate
     Dim letterBefore As String
 
@@ -40,8 +37,8 @@ Function getLetterBefore(rangeObj As Range) As String
     getLetterBefore = letterBefore
 End Function
 
-Function getLetterAfter(rangeObj As Range) As String
-    Dim copyRange As Range
+Function getLetterAfter(rangeObj As range) As String
+    Dim copyRange As range
     Dim letterAfter As String
 
     Set copyRange = rangeObj.Duplicate
@@ -59,9 +56,9 @@ Function getLetterAfter(rangeObj As Range) As String
     getLetterAfter = letterAfter
 End Function
 
-Function getSecondLetterAfter(rangeObj As Range) As String
+Function getSecondLetterAfter(rangeObj As range) As String
     ' Create a copy of the original range
-    Dim copyRange As Range
+    Dim copyRange As range
     Set copyRange = rangeObj.Duplicate
     Dim letterAfter As String
 
@@ -164,10 +161,6 @@ Function GetBezugArray(myPath As String) As Variant
     Loop
     Close #1
 
-    'If FoundDuplicate(splitar) Then
-    '    MsgBox ("BZEE")
-    '    result(1) = "DUPLICATE"
-    'Else
     If strVariable <> "" Then
         result(1) = "OK"
         result(2) = bezugArray
@@ -183,12 +176,14 @@ End Function
 Function getEnvironmentPath() As Variant
     Dim result(1 To 2) As Variant
     Dim path As String
+    Dim user As String
+    Dim profil As String
+
     Dim debugState As Boolean
     debugState = True
 
     If debugState = False Then
-        Dim user As String
-        Dim profil As String
+
 
         user = Environ("Username")
         profil = Environ("AppData")
@@ -258,19 +253,18 @@ Function InvalidDocument() As Boolean
     End If
     InvalidDocument = False
 End Function
-
 Sub SetTrackingSettings()
     Dim o, p As Integer
-    'ÃƒÆ’Ã¢â‚¬Å¾nderung 19.01.2017: prÃƒÆ’Ã‚Â¼fen, ob nicht angenommene ÃƒÆ’Ã¢â‚¬Å¾nderungen eines anderen Benutzers vorhanden sind
+    'Änderung 19.01.2017: prüfen, ob nicht angenommene Änderungenen eines anderen Benutzers vorhanden sind
     o = ActiveDocument.Revisions.Count
     For p = 1 To o
         If ActiveDocument.Revisions.Count <> 0 And ActiveDocument.Revisions(p).Author <> Application.UserName Then
-            MsgBox "ACHTUNG:" & vbCrLf & vbCrLf & "Nicht angenommene ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾nderungen eines anderen Benutzers (" & ActiveDocument.Revisions(p).Author & ") vorhanden - nachtrÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤gliche ErgÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤nzungen beeinflussen diese ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾nderungen!" & vbCrLf & vbCrLf & "Bitte anschlieÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸end prÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¼fen!", vbOKOnly + vbExclamation, "Suchen & ErgÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤nzen"
+            MsgBox "ACHTUNG:" & vbCrLf & vbCrLf & "Nicht angenommene Änderungenen eines anderen Benutzers (" & ActiveDocument.Revisions(p).Author & ") vorhanden - nachträgliche ErgÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤nzungen beeinflussen diese ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾nderungen!" & vbCrLf & vbCrLf & "Bitte anschlieÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸end prÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¼fen!", vbOKOnly + vbExclamation, "Suchen & ErgÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤nzen"
             Exit Sub
         End If
     Next
 
-    'wenn 'ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾nderungen verfolgen' deaktiviert ist -> aktivieren
+    'wenn 'Änderungen verfolgen' deaktiviert ist -> aktivieren
     If ActiveDocument.TrackRevisions = False Then
         ActiveDocument.TrackRevisions = True
     End If
@@ -278,31 +272,26 @@ Sub SetTrackingSettings()
     'Sprechblasen-Einstellung auf balloon umstellen
     ActiveWindow.View.MarkupMode = wdBalloonRevisions
 
-    'ErklÃƒÆ’Ã‚Â¤rung
+    'Erklärung
     Dim response As String
     response = MsgBox("Die Datei muss auf dem Desktop mit dem Dateinamen bezug.txt angelegt werden und muss folgende zeilenweise Syntax aufweisen:" & vbCrLf & vbCrLf & _
     "Suchbegriff1@Bezugsbezeichnung1" & vbCrLf & "Suchbegriff2@Bezugsbezeichnung2" & vbCrLf & "..." & vbCrLf & vbCrLf & _
-    "Es wird nur nach ganzen WÃƒÆ’Ã‚Â¶rtern gesucht." & vbCrLf & "Die Bezugsbezeichnung (nur Zahl, ohne Suchbegriff) wird beim EinfÃƒÆ’Ã‚Â¼gen automatisch in Klammern gesetzt.", vbInformation, "ErklÃƒÆ’Ã‚Â¤rung")
+    "Es wird nur nach ganzen Wörtern gesucht." & vbCrLf & "Die Bezugsbezeichnung (nur Zahl, ohne Suchbegriff) wird beim Einfügen automatisch in Klammern gesetzt.", vbInformation, "ErklÃƒÆ’Ã‚Â¤rung")
 End Sub
 
 Sub SortArrayByStringLength(inputArray As Variant)
     Dim temp As String
     Dim i As Integer, j As Integer
+    Dim string1 As String
+    Dim string2 As String
 
     ' Perform sorting using bubble sort algorithm
     For i = LBound(inputArray) To UBound(inputArray)
-        ' Skip empty lines or lines without "@" symbol
         If Len(inputArray(i)) > 0 And InStr(inputArray(i), "@") > 0 Then
             For j = i + 1 To UBound(inputArray)
-                ' Skip empty lines or lines without "@" symbol
                 If Len(inputArray(j)) > 0 And InStr(inputArray(j), "@") > 0 Then
-                    ' Extract the string before the "@" symbol for comparison
-                    Dim string1 As String
-                    Dim string2 As String
                     string1 = Left(inputArray(i), InStr(inputArray(i), "@") - 1)
                     string2 = Left(inputArray(j), InStr(inputArray(j), "@") - 1)
-
-                    ' Compare lengths and swap if necessary
                     If Len(string1) < Len(string2) Then
                         temp = inputArray(i)
                         inputArray(i) = inputArray(j)
@@ -313,52 +302,43 @@ Sub SortArrayByStringLength(inputArray As Variant)
         End If
     Next i
 End Sub
-Function CheckForRangeConflict(newStart As Integer, newEnd As Integer, rangesArray As Variant) As Boolean
-    ' Iterate through the existing ranges array
-    'MsgBox ("lBound: " & LBound(rangesArray, 2))
-    'MsgBox ("UBound: " & UBound(rangesArray, 2))
+Function FoundRangeConflict(newStart As Integer, newEnd As Integer, rangesArray As Variant, numCol As Integer) As Boolean
     Dim i As Integer
+    Dim existingStart As Integer
+    Dim existingEnd As Integer
+
+    If numCol = 0 Then
+        FoundRangeConflict = False
+        Exit Function
+    End If
     For i = LBound(rangesArray, 2) To UBound(rangesArray, 2)
-        ' Extract start and end positions of the existing range
-        Dim existingStart As Integer
-        Dim existingEnd As Integer
         existingStart = rangesArray(0, i)
         existingEnd = rangesArray(1, i)
-
-        ' Check for overlap
+        ' Check for conflicting overlap
         If newStart <= existingEnd And newEnd >= existingStart Then
-            ' Conflict detected
-            CheckForRangeConflict = True
+            FoundRangeConflict = True
             Exit Function
         End If
     Next i
-
-    ' No conflicts found
-    CheckForRangeConflict = False
+    FoundRangeConflict = False
 End Function
 Function GetRangesArray(bezugArray() As String) As Variant()
     Dim i, k, numCol As Integer
-    Dim suchstring, ergaenzstring As String
+    Dim suchstring, ergaenzstring, text As String
     Dim rangesArray() As Variant
+    Dim letterAfter As String
+    Dim secondLetterAfter As String
+    Dim letterBefore As String
+    Dim selectionRange As range
 
     numCol = 0
-    'ReDim rangesArray(1 To 1, 1 To 3)
     i = (UBound(bezugArray) - LBound(bezugArray) + 1) - 1
     For k = 1 To i
         suchstring = Left(bezugArray(k), InStr(bezugArray(k), "@") - 1)
         ergaenzstring = " (" & Right(bezugArray(k), Len(bezugArray(k)) - InStr(bezugArray(k), "@")) & ")"
-
-        'MsgBox ("HERE: suchstring: " & suchstring & "| number: " & ergaenzstring)
-
-        Dim selectionRange As Range
-        Set selectionRange = ActiveDocument.Range
-        Dim text As String
+        Set selectionRange = ActiveDocument.range
         text = GetFindText(suchstring)
         Do While selectionRange.Find.Execute(FindText:=text, MatchAllWordForms:=False, MatchSoundsLike:=False, MatchWildcards:=True, Forward:=True) = True
-            Dim letterAfter As String
-            Dim secondLetterAfter As String
-            Dim letterBefore As String
-
             letterAfter = getLetterAfter(selectionRange)
             secondLetterAfter = getSecondLetterAfter(selectionRange)
             letterBefore = getLetterBefore(selectionRange)
@@ -367,83 +347,24 @@ Function GetRangesArray(bezugArray() As String) As Variant()
                 If letterAfter = "s" Then
                     'check if next character is a letter or number, if yes dont consider as suchstring
                     If Not (IsLetter(secondLetterAfter) And Not IsNumeric(secondLetterAfter)) Or secondLetterAfter = "EOF" Then
-                        'move selection to one character before word ends ('s' as extra letter)
-                        'MsgBox ("FOUND RANGE: word: " & text & " Range.start: " & selectionRange.Start & " End: " & selectionRange.End + 1)
-
-                        'MsgBox ("numCol: " & numCol)
-
-                        Dim lol() As Variant
-                        lol = rangesArray
-                        If numCol > 0 Then
-                            'MsgBox ("lBound: " & LBound(rangesArray, 2))
-                            If CheckForRangeConflict(selectionRange.start, selectionRange.End + 1, rangesArray) = False Then
-                                ' Resize the array to accommodate one more row
-                                ReDim Preserve rangesArray(2, numCol)
-                                ' Add the new item to the last row
-                                rangesArray(0, numCol) = selectionRange.start
-                                rangesArray(1, numCol) = selectionRange.End + 1
-                                rangesArray(2, numCol) = ergaenzstring
-                                numCol = numCol + 1
-                                selectionRange.MoveEnd wdCharacter
-                                'selectionRange.InsertAfter ergaenzstring
-                            Else
-
-
-                            End If
-                        Else
+                        If FoundRangeConflict(selectionRange.start, selectionRange.End, rangesArray, numCol) = False Then
                             ReDim Preserve rangesArray(2, numCol)
-                        ' Add the new item to the last row
                             rangesArray(0, numCol) = selectionRange.start
-                                rangesArray(1, numCol) = selectionRange.End + 1
-                                rangesArray(2, numCol) = ergaenzstring
+                            rangesArray(1, numCol) = selectionRange.End + 1
+                            rangesArray(2, numCol) = ergaenzstring
                             numCol = numCol + 1
                             selectionRange.MoveEnd wdCharacter
                         End If
-                        'MsgBox ("lBound: " & LBound(rangesArray, 2))
-
                     End If
                 ElseIf (Not IsLetter(letterAfter) And Not IsNumeric(letterAfter)) Or letterAfter = "EOF" Then
-
-                    Dim lol2() As Variant
-                        lol2 = rangesArray
-                        If numCol > 0 Then
-                            'MsgBox ("lBound: " & LBound(rangesArray, 2))
-                            If CheckForRangeConflict(selectionRange.start, selectionRange.End, rangesArray) = False Then
-                                ' Resize the array to accommodate one more row
-                                'ReDim Preserve rangesArray(numCol, 2)
-
-                                ReDim Preserve rangesArray(2, numCol)
-
-                                ' Add the new item to the last row
-                                rangesArray(0, numCol) = selectionRange.start
-                                rangesArray(1, numCol) = selectionRange.End
-                                rangesArray(2, numCol) = ergaenzstring
-                                numCol = numCol + 1
-                                selectionRange.MoveEnd wdCharacter
-                                'selectionRange.InsertAfter ergaenzstring
-                            Else
-                                'MsgBox ("FOUND OVERLAP")
-                            End If
-                        Else
-                        ' Resize the array to accommodate one more row
-                            ReDim Preserve rangesArray(2, numCol)
-                            ' Add the new item to the last row
-                            rangesArray(0, numCol) = selectionRange.start
-                                rangesArray(1, numCol) = selectionRange.End
-                                rangesArray(2, numCol) = ergaenzstring
-                            numCol = numCol + 1
-                            selectionRange.MoveEnd wdCharacter
-                        End If
-
-
-
-
-                    'move selection to two character before word ends
-                    'ReDim Preserve rangesArray(3, numCol + 1)
-                    'rangesArray(1, numCol) = selectionRange.Start
-                    'rangesArray(2, numCol) = selectionRange.End
-                    'rangesArray(3, numCol) = ergaenzstring
-                    'numCol = numCol + 1
+                    If FoundRangeConflict(selectionRange.start, selectionRange.End, rangesArray, numCol) = False Then
+                        ReDim Preserve rangesArray(2, numCol)
+                        rangesArray(0, numCol) = selectionRange.start
+                        rangesArray(1, numCol) = selectionRange.End
+                        rangesArray(2, numCol) = ergaenzstring
+                        numCol = numCol + 1
+                        selectionRange.MoveEnd wdCharacter
+                    End If
                 End If
             End If
             selectionRange.Collapse wdCollapseEnd
@@ -451,15 +372,16 @@ Function GetRangesArray(bezugArray() As String) As Variant()
     Next
     GetRangesArray = rangesArray
 End Function
-
 Sub InsertNumbers(rangesArray() As Variant)
-    Dim i As Integer
-    For i = LBound(rangesArray, 2) To UBound(rangesArray, 2)
-        MsgBox (rangesArray(1, i) & "  " & rangesArray(2, i) & "  " & rangesArray(3, i) & "  ")
-    Next i
+    Dim docContent As range
+    Dim k As Integer
 
+    Set docContent = ActiveDocument.Content
+    For k = LBound(rangesArray, 2) To UBound(rangesArray, 2)
+        docContent.SetRange start:=rangesArray(0, k), End:=rangesArray(1, k)
+        docContent.InsertAfter rangesArray(2, k)
+    Next k
 End Sub
-
 Sub SortArrayBySecondColumnDescending(ByRef rangesArray() As Variant)
     Dim numRows As Long
     Dim numCols As Long
@@ -469,11 +391,9 @@ Sub SortArrayBySecondColumnDescending(ByRef rangesArray() As Variant)
     Dim i, j, k As Long
     Dim temp As Variant
 
-    ' Perform sorting using bubble sort algorithm
     For i = 0 To numRows
-        For j = 0 To numRows - 1 ' Adjusted loop bound to avoid going out of bounds
+        For j = 0 To numRows - 1
             If rangesArray(1, j) < rangesArray(1, j + 1) Then
-                ' Swap elements if needed
                 For k = 0 To numCols
                     temp = rangesArray(k, j)
                     rangesArray(k, j) = rangesArray(k, j + 1)
@@ -484,76 +404,19 @@ Sub SortArrayBySecondColumnDescending(ByRef rangesArray() As Variant)
     Next i
 End Sub
 Function NewSuchErsetz(bezugArray() As String)
-    MsgBox ("coming soon")
-
-    '- sort array of bezugArray (biggest first)
-    SortArrayByStringLength bezugArray
-
-
-    '- iterate through array & store found texts ranges in 3 times X array, third position is bezugszeichen (range.start | range.end | number to insert)
     Dim rangesArray() As Variant
 
-
-
+    SortArrayByStringLength bezugArray
     rangesArray = GetRangesArray(bezugArray)
-
-    'MsgBox ("lbound outside: " & LBound(rangesArray))
     SortArrayBySecondColumnDescending rangesArray
-
-
-    ' Move the insertion point to the desired position
-    'docContent.MoveStart unit:=wdCharacter, Count:=insertPosition
-
-    ' Insert the text at the specified position
-    'docContent.InsertAfter textToInsert
-
-    Dim insertPosition As Integer
-    Dim textToInsert As String
-
-
-
-    ' Get a reference to the document's content
-    Dim docContent As Range
-    Set docContent = ActiveDocument.Content
-
-
-    Dim start As Integer
-    Dim ende As Integer
-    start = LBound(rangesArray, 2)
-    ende = UBound(rangesArray, 2)
-
-    Dim q As Integer
-    q = start
-    For q = start To ende
-        'MsgBox ("Range.Start: " & rangesArray(0, q) & " Range.End: " & rangesArray(1, q) & " Nbr: " & rangesArray(2, q))
-
-        insertPosition = rangesArray(1, q)
-        textToInsert = " " & rangesArray(2, q)
-
-         ' Set the insertion point to the desired position
-        'docContent.End = rangesArray(2, q)  ' Move the start of the range to the desired position
-        docContent.SetRange start:=rangesArray(0, q), End:=rangesArray(1, q)
-        ' Insert the text at the specified position
-        'docContent.text = rangesArray(3, q)
-
-        docContent.InsertAfter rangesArray(2, q)
-    Next q
-
-
-    'InsertNumbers rangesArray
-
-
-'- for every following string, check if found string is in the 3X array if yes, skip it
-'- iterate backwards through text and insert specific numbers after range end
-
-
+    InsertNumbers rangesArray
 End Function
 
 Sub SuchErgaenzSpezial()
 
 '
 'Makro vom 30.09.2016 von Jacek Manka
-'bearbeitet 10.03.2024 von Marie Mensing
+'bearbeitet 21.03.2024 von Marie Mensing
 '
 
 'Variablen setzen
@@ -565,9 +428,9 @@ Dim i, k, l, m, n, o, p As Integer
 ReDim ar(0)
 i = 0
 
-    Mldg5 = "Suchen & ErgÃ¤nzen durch Abbruch beendet."
+    Mldg5 = "Suchen & Ergänzen durch Abbruch beendet."
     Stil5 = vbInformation
-    Titel5 = "Suchen & ErgÃ¤nzen abgebrochen!"
+    Titel5 = "Suchen & Ergänzen abgebrochen!"
 
     If InvalidDocument Then
         GoTo ende
@@ -595,7 +458,6 @@ i = 0
                 bezugArray = values(2)
                 NewSuchErsetz bezugArray
                 GoTo ende
-                'GoTo SuchErsetz
             Case "ENDE"
                 GoTo ende
             Case "DUPLICATE"
@@ -607,7 +469,6 @@ i = 0
     GoTo ende
 
 Sucheingabe:
-    'Suchstring
     suchstring = InputBox("Bitte geben Sie den " & (i + 1) & ". Suchbegriff ein:", "Eingabe des Suchbegriffs")
 
     'Suchstring Cancel?
@@ -617,7 +478,7 @@ Sucheingabe:
     Else
         'OK und kein Suchstring?
         If Len(suchstring) = 0 Then
-            If MsgBox("Suchen & ErgÃ¤nzen kann nicht stattfinden, weil kein Suchbegriff / keine ErgÃ¤nzung eingegeben wurde.", vbRetryCancel, "Suchen & ErgÃƒÆ’Ã‚Â¤nzen fehlgeschlagen!") = vbRetry Then
+            If MsgBox("Suchen & Ergänzen kann nicht stattfinden, weil kein Suchbegriff / keine ErgÃ¤nzung eingegeben wurde.", vbRetryCancel, "Suchen & ErgÃƒÆ’Ã‚Â¤nzen fehlgeschlagen!") = vbRetry Then
                 GoTo Sucheingabe:
             Else
                 Antwort5 = MsgBox(Mldg5, Stil5, Titel5)
@@ -644,7 +505,7 @@ Sucheingabe:
 
     If Selection.Find.Found = False Then
         Dim response As String
-        response = MsgBox("Suchen & ErgÃ¤nzen kann nicht stattfinden, weil der Suchbegriff " & Chr(34) & suchstring & Chr(34) & " nicht gefunden werden konnte.", vbOKOnly + vbCritical, "Suchen & ErgÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤nzen fehlgeschlagen!")
+        response = MsgBox("Suchen & Ergänzen kann nicht stattfinden, weil der Suchbegriff " & Chr(34) & suchstring & Chr(34) & " nicht gefunden werden konnte.", vbOKOnly + vbCritical, "Suchen & ErgÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤nzen fehlgeschlagen!")
         GoTo ende
     End If
 
@@ -657,10 +518,9 @@ Ergaenzeingabe:
         Antwort5 = MsgBox(Mldg5, Stil5, Titel5)
         GoTo ende:
     Else
-
         'OK und kein Suchstring?
         If Len(ergaenzstring) = 0 Then
-            If MsgBox("Suchen & ErgÃ¤nzen kann nicht stattfinden, weil kein Suchbegriff / keine ErgÃƒÆ’Ã‚Â¤nzung eingegeben wurde.", vbRetryCancel, "Suchen & ErgÃƒÆ’Ã‚Â¤nzen fehlgeschlagen!") = vbRetry Then
+            If MsgBox("Suchen & Ergänzen kann nicht stattfinden, weil kein Suchbegriff / keine Ergänzung eingegeben wurde.", vbRetryCancel, "Suchen & ErgÃƒÆ’Ã‚Â¤nzen fehlgeschlagen!") = vbRetry Then
                 GoTo Ergaenzeingabe:
             Else
                 Antwort5 = MsgBox(Mldg5, Stil5, Titel5)
@@ -673,44 +533,10 @@ Ergaenzeingabe:
     i = i + 1: ReDim Preserve ar(i)
     ar(i) = suchstring & "@" & ergaenzstring
 
-    If MsgBox("MÃƒÆ’Ã‚Â¶chten Sie weitere Bezugsbezeichnungen einfÃƒÆ’Ã‚Â¼gen?", vbYesNo, "Wiederholung") = vbYes Then
+    If MsgBox("Möchten Sie weitere Bezugsbezeichnungen einfügen?", vbYesNo, "Wiederholung") = vbYes Then
         GoTo Sucheingabe
     End If
 
-SuchErsetz:
-    i = (UBound(bezugArray) - LBound(bezugArray) + 1) - 1
-    For k = 1 To i
-        suchstring = Left(bezugArray(k), InStr(bezugArray(k), "@") - 1)
-        ergaenzstring = " (" & Right(bezugArray(k), Len(bezugArray(k)) - InStr(bezugArray(k), "@")) & ")"
-        Dim selectionRange As Range
-        Set selectionRange = ActiveDocument.Range
-        Dim text As String
-        text = GetFindText(suchstring)
-        Do While selectionRange.Find.Execute(FindText:=text, MatchAllWordForms:=False, MatchSoundsLike:=False, MatchWildcards:=True, Forward:=True) = True
-            Dim letterAfter As String
-            Dim secondLetterAfter As String
-            Dim letterBefore As String
-
-            letterAfter = getLetterAfter(selectionRange)
-            secondLetterAfter = getSecondLetterAfter(selectionRange)
-            letterBefore = getLetterBefore(selectionRange)
-
-            If (Not IsLetter(letterBefore) And Not IsNumeric(letterBefore)) Or letterBefore = "BOF" Then
-                If letterAfter = "s" Then
-                    'check if next character is a letter or number, if yes dont consider as suchstring
-                    If Not (IsLetter(secondLetterAfter) And Not IsNumeric(secondLetterAfter)) Or secondLetterAfter = "EOF" Then
-                        'move selection to one character before word ends ('s' as extra letter)
-                        selectionRange.MoveEnd wdCharacter
-                        selectionRange.InsertAfter ergaenzstring
-                    End If
-                ElseIf (Not IsLetter(letterAfter) And Not IsNumeric(letterAfter)) Or letterAfter = "EOF" Then
-                    'move selection to two character before word ends
-                    selectionRange.InsertAfter ergaenzstring
-                End If
-            End If
-            selectionRange.Collapse wdCollapseEnd
-        Loop
-    Next
 ende:
     MsgBox ("ENDE")
     'Nachverfolgungseinstellungen wiederherstellen
@@ -719,7 +545,7 @@ ende:
 
     Selection.HomeKey unit:=wdStory
 
-    'Suchparameter zurÃƒÆ’Ã‚Â¼cksetzen
+    'Suchparameter zurücksetzen
     With Selection.Find
        .ClearFormatting
        .Replacement.ClearFormatting
