@@ -1,46 +1,39 @@
-'Function that returns a string with wildcards, enabling the search for both upper and lowercase strings
+'
+'Function checks if passed character is a letter [a-zA-Z]
+Function IsLetter(char As String) As Boolean
+    Dim charCode As Integer
+    charCode = Asc(UCase(char))
+    If charCode >= Asc("A") And charCode <= Asc("Z") Then
+        IsLetter = True
+    Else
+        IsLetter = False
+    End If
+End Function
+'
+'Function that returns a string with wildcards, enabling the search for both upper and lowercase words in the string
 Function GetCaseInsensitiveSearchString(suchstring) As String
-    'Dim lowercase As String
-    'Dim uppercase As String
-    'Dim cutFirstLetter As String
-
-    'lowercase = LCase(Left(suchstring, 1))
-    'uppercase = UCase(lowercase)
-    'cutFirstLetter = Mid(suchstring, 2)
-
-    'GetCaseInsensitiveSearchString = "[" & lowercase & "," & uppercase & "]" & cutFirstLetter
-
-        Dim words() As String
+    Dim words() As String
     Dim result As String
     Dim word As Variant
     Dim lowercase As String
     Dim uppercase As String
     Dim cutFirstLetter As String
 
-    ' Split the input string into words
     words = Split(suchstring, " ")
 
-    ' Loop through each word
     For Each word In words
         ' Extract the first letter of the word
         lowercase = LCase(Left(word, 1))
         uppercase = UCase(lowercase)
         cutFirstLetter = Mid(word, 2)
-
-        ' Construct the case-insensitive search string for the word
         result = result & "[" & lowercase & "," & uppercase & "]" & cutFirstLetter & " "
     Next word
 
     ' Remove trailing whitespace
     result = Trim(result)
-
-    ' Return the result
     GetCaseInsensitiveSearchString = result
-
-
-
-
 End Function
+'
 'Function that returns the letter before range
 Function getLetterBefore(rangeObj As Range) As String
     Dim copyRange As Range
@@ -58,6 +51,7 @@ Function getLetterBefore(rangeObj As Range) As String
     Set copyRange = Nothing
     getLetterBefore = letterBefore
 End Function
+'
 'Function that returns the first letter after range
 Function getLetterAfter(rangeObj As Range) As String
     Dim copyRange As Range
@@ -77,6 +71,7 @@ Function getLetterAfter(rangeObj As Range) As String
     Set copyRange = Nothing
     getLetterAfter = letterAfter
 End Function
+'
 'Function that returns the second letter after range
 Function getSecondLetterAfter(rangeObj As Range) As String
     ' Create a copy of the original range
@@ -99,7 +94,7 @@ Function getSecondLetterAfter(rangeObj As Range) As String
     Set copyRange = Nothing
     getSecondLetterAfter = letterAfter
 End Function
-
+'
 'Function extracts suchbegriffe from bezug.txt and checks for syntactical errors
 Function GetBezugArray(myPath As String) As Variant
     Dim result(1 To 2) As Variant
@@ -203,6 +198,7 @@ Function GetBezugArray(myPath As String) As Variant
     End If
     GetBezugArray = result
 End Function
+'
 Function getEnvironmentPath() As Variant
     Dim result(1 To 2) As Variant
     Dim path As String
@@ -213,7 +209,6 @@ Function getEnvironmentPath() As Variant
     debugState = True
 
     If debugState = False Then
-
 
         user = Environ("Username")
         profil = Environ("AppData")
@@ -258,6 +253,7 @@ Function getEnvironmentPath() As Variant
     End If
     getEnvironmentPath = result
 End Function
+'
 'basic checks for word document
 Function InvalidDocument() As Boolean
     Dim response As String
@@ -284,6 +280,7 @@ Function InvalidDocument() As Boolean
     End If
     InvalidDocument = False
 End Function
+'
 Sub SetTrackingSettings()
     Dim o, p As Integer
     'Ãƒâ€žnderung 19.01.2017: prÃƒÂ¼fen, ob nicht angenommene Ãƒâ€žnderungenen eines anderen Benutzers vorhanden sind
@@ -309,6 +306,7 @@ Sub SetTrackingSettings()
     "Suchbegriff1@Bezugsbezeichnung1" & vbCrLf & "Suchbegriff2@Bezugsbezeichnung2" & vbCrLf & "..." & vbCrLf & vbCrLf & _
     "Es wird nur nach ganzen WÃƒÂ¶rtern gesucht." & vbCrLf & "Die Bezugsbezeichnung (nur Zahl, ohne Suchbegriff) wird beim EinfÃƒÂ¼gen automatisch in Klammern gesetzt.", vbInformation, "ErklÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤rung")
 End Sub
+'
 'Function sorts based on lenght the Suchebegriffe from the bezug.txt file
 Sub SortArrayByStringLength(inputArray As Variant)
     Dim temp As String
@@ -333,6 +331,7 @@ Sub SortArrayByStringLength(inputArray As Variant)
         End If
     Next i
 End Sub
+'
 'Function that checks if newly found search term conflicts with previously identified search term ranges
 'It skips strings that are contained within other strings found in the document
 Function FoundRangeConflict(newStart As Integer, newEnd As Integer, rangesArray As Variant, numCol As Integer) As Boolean
@@ -355,7 +354,7 @@ Function FoundRangeConflict(newStart As Integer, newEnd As Integer, rangesArray 
     Next i
     FoundRangeConflict = False
 End Function
-
+'
 'creates Array with start and end Range of every found Suchbegriff in the word document
 'strings that are Plural [ending with 's'] or capitalized in the beginning are also valid now
 Function GetRangesArray(bezugArray() As String) As Variant()
@@ -408,7 +407,7 @@ Function GetRangesArray(bezugArray() As String) As Variant()
     Next
     GetRangesArray = rangesArray
 End Function
-
+'
 'Insert Bezugszeichen in word document after found Suchbegriff
 Sub InsertNumbers(rangesArray() As Variant)
     Dim docContent As Range
@@ -420,7 +419,7 @@ Sub InsertNumbers(rangesArray() As Variant)
         docContent.InsertAfter rangesArray(2, k)
     Next k
 End Sub
-
+'
 'Bubble sort to sort rangesArray based on Range.End Value [rangesArray(1,x)]
 Sub SortArrayBySecondColumnDescending(ByRef rangesArray() As Variant)
     Dim numRows As Long
@@ -443,7 +442,7 @@ Sub SortArrayBySecondColumnDescending(ByRef rangesArray() As Variant)
         Next j
     Next i
 End Sub
-
+'
 Function NewSuchErsetz(bezugArray() As String)
     Dim rangesArray() As Variant
 
@@ -452,7 +451,7 @@ Function NewSuchErsetz(bezugArray() As String)
     SortArrayBySecondColumnDescending rangesArray
     InsertNumbers rangesArray
 End Function
-
+'
 Function Sucheingabe() As Boolean
     Dim suchstring As String
     Dim ergaenzstring As String
@@ -532,20 +531,10 @@ Sub SuchErgaenzSpezial()
 '
 
     Dim markup, trackrev
-    Dim Titel5, Mldg5, Stil5, Antwort5
-    Dim suchstring, ergaenzstring, Pfad, ar() As String
-    Dim i, k, l, m, n, o, p As Integer
-    ReDim ar(0)
     Dim path As String
     Dim envPath As Variant
     Dim bezugArray() As String
     Dim bzgArray As Variant
-
-    i = 0
-
-    Mldg5 = "Suchen & ErgÃƒÂ¤nzen durch Abbruch beendet."
-    Stil5 = vbInformation
-    Titel5 = "Suchen & ErgÃƒÂ¤nzen abgebrochen!"
 
     If InvalidDocument Then
         GoTo ende
@@ -577,8 +566,8 @@ Sub SuchErgaenzSpezial()
 ende:
     MsgBox ("ENDE")
     'Nachverfolgungseinstellungen wiederherstellen
-     ActiveWindow.View.MarkupMode = markup
-     ActiveDocument.TrackRevisions = trackrev
+    ActiveWindow.View.MarkupMode = markup
+    ActiveDocument.TrackRevisions = trackrev
 
     Selection.HomeKey unit:=wdStory
 
