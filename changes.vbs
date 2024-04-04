@@ -147,50 +147,27 @@ Function getEnvironmentPath() As Variant
     Dim user As String
     Dim profil As String
 
-    Dim debugState As Boolean
-    debugState = True
+    user = Environ("Username")
+    profil = Environ("AppData")
 
-    If debugState = False Then
-
-        user = Environ("Username")
-        profil = Environ("AppData")
-
-        'TXT-Datei auf SH-User-Desktop
-        If InStr(profil, "\sh\") <> 0 Then
-            path = "\\brefile01\profile$\" & user & "\sh\Desktop\" & "bezug.txt"
+    'TXT-Datei auf SH-User-Desktop
+    If InStr(profil, "\sh\") <> 0 Then
+        path = "\\brefile01\profile$\" & user & "\sh\Desktop\" & "bezug.txt"
+    Else
+        path = "\\brefile11\userhomes$\" & user & "\Desktop\" & "bezug.txt"
+    End If
+    If Dir(path) <> "" Then
+        If MsgBox("Datei bezug.txt nicht vorhanden. Fortfahren mit manueller Eingabe?", vbYesNo, "Dateiprüfung") = vbYes Then
+            result(1) = "SUCHEINGABE"
         Else
-            path = "\\brefile11\userhomes$\" & user & "\Desktop\" & "bezug.txt"
+            result(1) = "ENDE"
         End If
-        If Dir(path) <> "" Then
-            If MsgBox("Datei bezug.txt nicht vorhanden. Fortfahren mit manueller Eingabe?", vbYesNo, "Dateiprüfung") = vbYes Then
-                result(1) = "SUCHEINGABE"
-            Else
-                result(1) = "ENDE"
-            End If
+    Else
+        If MsgBox("Datei bezug.txt vorhanden. Mit bezug.txt Datei fortfahren?" & vbCrLf & vbCrLf & "(Wählen Sie Nein um mit der manuellen Eingabe fortzufahren)", vbYesNo, "Dateiprüfung") = vbYes Then
+            result(1) = "OK"
+            result(2) = path
         Else
-            If MsgBox("Datei bezug.txt vorhanden. Mit bezug.txt Datei fortfahren?" & vbCrLf & vbCrLf & "(Wählen Sie Nein um mit der manuellen Eingabe fortzufahren)", vbYesNo, "Dateiprüfung") = vbYes Then
-                result(1) = "OK"
-                result(2) = path
-            Else
-                result(1) = "SUCHEINGABE"
-            End If
-        End If
-    Else 'delete this section later
-        'my thing to make it work for citrix:
-        path = "\\brefile11.esp.dom\citrixprofiles$\msg\Desktop\bezug.txt"
-        If Dir(path) <> "" Then
-            If MsgBox("Datei bezug.txt vorhanden. Mit bezug.txt Datei fortfahren?" & vbCrLf & vbCrLf & "(Wählen Sie Nein um mit der manuellen Eingabe fortzufahren)", vbYesNo, "Dateiprüfung") = vbYes Then
-                result(1) = "OK"
-                result(2) = path
-            Else
-                result(1) = "SUCHEINGABE"
-            End If
-        Else
-            If MsgBox("Datei bezug.txt nicht vorhanden. Fortfahren mit manueller Eingabe?", vbYesNo, "Dateiprüfung") = vbYes Then
-                result(1) = "SUCHEINGABE"
-            Else
-                result(1) = "ENDE"
-            End If
+            result(1) = "SUCHEINGABE"
         End If
     End If
     getEnvironmentPath = result
