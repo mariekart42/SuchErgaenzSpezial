@@ -225,16 +225,16 @@ End Function
 '
 Sub SetTrackingSettings()
     Dim o, p As Integer
-    'Ã„nderung 19.01.2017: prüfen, ob nicht angenommene Ã„nderungenen eines anderen Benutzers vorhanden sind
+    'Änderung 19.01.2017: prüfen, ob nicht angenommene Änderungenen eines anderen Benutzers vorhanden sind
     o = ActiveDocument.Revisions.Count
     For p = 1 To o
         If ActiveDocument.Revisions.Count <> 0 And ActiveDocument.Revisions(p).Author <> Application.UserName Then
-            MsgBox "ACHTUNG:" & vbCrLf & vbCrLf & "Nicht angenommene Ã„nderungenen eines anderen Benutzers (" & ActiveDocument.Revisions(p).Author & ") vorhanden - nachträgliche Ergnzungen beeinflussen diese Ã„nderungen!" & vbCrLf & vbCrLf & "Bitte anschlieÃŸend prüfen!", vbOKOnly + vbExclamation, "Suchen & Ergänzen"
+            MsgBox "ACHTUNG:" & vbCrLf & vbCrLf & "Nicht angenommene Änderungenen eines anderen Benutzers (" & ActiveDocument.Revisions(p).Author & ") vorhanden - nachträgliche Ergnzungen beeinflussen diese Änderungen!" & vbCrLf & vbCrLf & "Bitte anschließend prüfen!", vbOKOnly + vbExclamation, "Suchen & Ergänzen"
             Exit Sub
         End If
     Next
 
-    'wenn 'Ã„nderungen verfolgen' deaktiviert ist -> aktivieren
+    'wenn 'Änderungen verfolgen' deaktiviert ist -> aktivieren
     If ActiveDocument.TrackRevisions = False Then
         ActiveDocument.TrackRevisions = True
     End If
